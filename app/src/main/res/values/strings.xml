@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FriendsCompolsury</string>
+    <string name="getPerson">Get Person</string>
 </resources>
