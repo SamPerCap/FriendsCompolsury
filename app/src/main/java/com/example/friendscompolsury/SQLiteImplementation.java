@@ -7,13 +7,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SQLiteImplementation implements IDataCRUD {
 
     private static final String DATABASE_NAME = "agenda.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "contacts_table";
     private static final String INSERT = "insert into " + TABLE_NAME
-            + "(name, phone) values (?,?)";
+            + "(name, phone, adress, location, mail, website, birthday, picture) values (?,?,?,?,?,?,?,?)";
     private SQLiteDatabase db;
     private SQLiteStatement insertStmt;
 
@@ -58,13 +61,16 @@ public class SQLiteImplementation implements IDataCRUD {
         Log.d(MainActivity.TAG, "Getting all persons");
         List<BEPerson> list = new ArrayList<BEPerson>();
         Cursor cursor = this.db.query(TABLE_NAME,
-                new String[]{"id", "name", "phone"},
+                new String[]{"id", "name", "phone", "address", "location", "mail", "website", "birthday", "picture"},
                 null, null,
                 null, null, "name");
         if (cursor.moveToFirst()) {
             do {
-                list.add(new BEPerson(cursor.getInt(0),
-                        cursor.getString(1), cursor.getString(2)));
+                //For each column it will take a value.
+                list.add(new BEPerson(cursor.getInt(0), cursor.getString(1),
+                        cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
+                        cursor.getString(5), cursor.getString(6), cursor.getString(7),
+                        cursor.getInt(8)));
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()) {
@@ -79,7 +85,11 @@ public class SQLiteImplementation implements IDataCRUD {
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE id = ?";
         Cursor cursor = db.rawQuery(selectQuery, new String[]{"" + id});
         if (cursor.moveToFirst()) {
-            return new BEPerson(cursor.getInt(0), cursor.getString(1), cursor.getString(2));
+            //For each column it will take a value.
+            return new BEPerson(cursor.getInt(0), cursor.getString(1),
+                    cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
+                    cursor.getString(5), cursor.getString(6), cursor.getString(7),
+                    cursor.getInt(8));
         }
         throw new IllegalArgumentException("Could not get Person by Id " + id);
     }
@@ -93,7 +103,8 @@ public class SQLiteImplementation implements IDataCRUD {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_NAME
-                    + " (id INTEGER PRIMARY KEY, name TEXT, phone TEXT)");
+                    + " (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, address TEXT, location REAL," +
+                    " mail TEXT, website TEXT, birthday TEXT, picture INTEGER)");
 
         }
 

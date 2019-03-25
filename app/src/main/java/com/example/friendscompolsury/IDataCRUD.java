@@ -1,5 +1,7 @@
 package com.example.friendscompolsury;
 
+import java.util.List;
+
 public interface IDataCRUD {
 
     long addPerson(BEPerson p);
