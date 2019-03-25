@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DetailActivity">
+
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detail"
+        android:layout_gravity="center"
+        style="@style/Base.TextAppearance.AppCompat.Large"/>
+
+    <ImageView
+        android:id="@+id/pictureView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="284dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <TextView android:text="Name:" />
+
+            <EditText
+                android:id="@+id/etName"
+                android:text="Name" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <TextView android:text="Email:" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:text="Email" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="Url:" />
+
+            <EditText
+                android:id="@+id/etLocation"
+                android:text="Url" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="Phone:" />
+
+            <EditText
+                android:id="@+id/etPhone"
+                android:text="Phone" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip">
+
+            <TextView android:text="Favorite:" />
+
+            <CheckBox
+                android:id="@+id/cbFavorite"
+                android:checked="false" />
+        </TableRow>
+
+        <!--
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip" >
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:text="Cancel"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:id="@+id/btnOk"
+                android:text="OK"
+                android:layout_gravity="center"/>
+        </TableRow>
+        -->
+    </TableLayout>
+
+    <LinearLayout android:id="@+id/LinearLayout01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:weightSum="4"
+        android:padding="2dp" android:layout_margin="1dp">
+
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSMS"
+            android:onClick="smsButton"
+            android:text="SMS"
+            android:layout_weight="1"
+            android:layout_margin="1dp"/>
+
+        <Button
+            android:id="@+id/btnCamera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="camButton"
+            android:text="Cam" />
+
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnCALL"
+            android:text="Call"
+            android:onClick="callButton"
+            android:layout_weight="1"
+
+            android:layout_margin="1dp"/>
+
+        <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnEMAIL"
+            android:onClick="mailButton"
+            android:text="Email"
+            android:layout_weight="1"
+
+            android:layout_margin="1dp"/>
+
+        <Button android:id="@+id/btnLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:onClick="getLocation"
+            android:layout_weight="1"
+
+            android:layout_margin="1dp"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="421dp"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+
+</LinearLayout>

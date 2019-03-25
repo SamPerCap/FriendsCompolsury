@@ -1,4 +1,4 @@
-package com.example.friendscompolsury;
+package dk.easv.friendsv2;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.friendscompolsury", appContext.getPackageName());
+        assertEquals("dk.easv.friendsv2", appContext.getPackageName());
     }
 }

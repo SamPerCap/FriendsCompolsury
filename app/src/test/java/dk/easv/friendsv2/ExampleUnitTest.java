@@ -1,4 +1,4 @@
-package com.example.friendscompolsury;
+package dk.easv.friendsv2;
 
 import org.junit.Test;
 
