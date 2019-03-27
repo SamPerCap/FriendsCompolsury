@@ -1,10 +1,14 @@
 package dk.easv.friendsv2;
 
+import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -12,36 +16,50 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import dk.easv.friendsv2.Adaptor.FreindsAdaptor;
 import dk.easv.friendsv2.Model.BEFriend;
 import dk.easv.friendsv2.Model.Friends;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 
     public static String TAG = "Friend2";
-
+    ListView list;
     Friends m_friends;
-
+    Context context = this;
+    ArrayList<BEFriend> friends;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setTitle("Friends v2");
+        setContentView(R.layout.simple_list);
         m_friends = new Friends();
 
-        ArrayList<BEFriend> friends;
+
 
         friends = m_friends.getAll();
+        FreindsAdaptor adapter=new FreindsAdaptor(this, m_friends.getAll(),m_friends.getNames() );
+        list=(ListView)findViewById(R.id.listview);
+        list.setAdapter(adapter);
 
-        ListAdapter adapter =
-                new ArrayAdapter<BEFriend>(this,
-                        android.R.layout.simple_list_item_1,
-                        friends);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        setListAdapter(adapter);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                // TODO Auto-generated method stub
+               //BEFriend Slecteditem= m_f;
+                Intent x = new Intent(context,DetailActivity.class);
+                Log.d(TAG, "Detail activity will be started");
+                BEFriend friend = m_friends.getAll().get(position);
+                addData(x, friend);
+                startActivity(x);
+                Log.d(TAG, "Detail activity is started");
+            }
+        });
 
     }
 
 
-    @Override
+   /* @Override
     public void onListItemClick(ListView parent, View v, int position,
                                 long id) {
 
@@ -52,7 +70,7 @@ public class MainActivity extends ListActivity {
         startActivity(x);
         Log.d(TAG, "Detail activity is started");
 
-    }
+    }*/
 
     private void addData(Intent x, BEFriend f)
     {

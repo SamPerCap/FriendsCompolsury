@@ -74,7 +74,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        initMap();
+       initMap();
         setGUI();
     }
 
@@ -82,7 +82,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            m_map.setMyLocationEnabled(true);
+          //  m_map.setMyLocationEnabled(true);
         } else {
             ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }

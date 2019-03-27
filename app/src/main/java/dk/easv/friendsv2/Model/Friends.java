@@ -33,5 +33,21 @@ public class Friends {
 		}
 		return res;
 	}
+	public Integer[] getImages()
+	{
+		Integer[] res = new Integer[m_friends.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = m_friends.get(i).getPicture();
+		}
+		return res;
+	}
+	public BEFriend[] getFriends()
+	{
+		BEFriend[] res = new BEFriend[m_friends.size()];
+		for (int i = 0; i < res.length; i++) {
+			res[i] = m_friends.get(i);
+		}
+		return res;
+	}
 
 }
