@@ -29,10 +29,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.simple_list);
         m_friends = new Friends();
 
-
-
-        friends = m_friends.getAll();
-        FreindsAdaptor adapter=new FreindsAdaptor(this, m_friends.getAll(),m_friends.getNames() );
+        IDataCRUD dataCRUD = new SQLiteImplementation(this);
+        m_friends.setArraylistFried((ArrayList)dataCRUD.getAllPersons());
+        FreindsAdaptor adapter=new FreindsAdaptor(this, (ArrayList)dataCRUD.getAllPersons(),m_friends.getNames() );
         list=(ListView)findViewById(R.id.listview);
         list.setAdapter(adapter);
 
@@ -51,6 +50,8 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Detail activity is started");
             }
         });
+
+        dataCRUD.addPerson(m_friends.getAll().get(0));
 
     }
 

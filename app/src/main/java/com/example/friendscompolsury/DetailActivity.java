@@ -38,7 +38,7 @@ import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,
-        OnMapReadyCallback{
+        OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 1;
 
@@ -75,17 +75,16 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-       initMap();
+        initMap();
         setGUI();
     }
 
-    private void initMap()
-    {
+    private void initMap() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-          //  m_map.setMyLocationEnabled(true);
+            //  m_map.setMyLocationEnabled(true);
         } else {
-            ActivityCompat.requestPermissions(this,new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
         Log.d(TAG, "getting the map async");
@@ -120,10 +119,10 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     private void sendSMS() {
         Toast.makeText(this, "An sms will be send", Toast.LENGTH_LONG)
                 .show();
-        if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
-            if ( checkSelfPermission(Manifest.permission.SEND_SMS)
-                    == PackageManager.PERMISSION_DENIED ) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS)
+                    == PackageManager.PERMISSION_DENIED) {
 
                 Log.d(TAG, "permission denied to SEND_SMS - requesting it");
                 String[] permissions = {Manifest.permission.SEND_SMS};
@@ -188,11 +187,11 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     public void camButton(View view) {
         Log.e(TAG, "What happens?");
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if ( cameraIntent.resolveActivity(getPackageManager()) != null ) {
-            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
-                if ( checkSelfPermission(Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED ) {
+                if (checkSelfPermission(Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED) {
 
                     Log.d(TAG, "permission denied to CAMERA - requesting it");
                     String[] permissions = {Manifest.permission.CAMERA};
@@ -207,7 +206,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if ( requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK ) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
             //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
             Bundle b = data.getExtras();
@@ -222,10 +221,10 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         Toast.makeText(this, "A CALL will be made", Toast.LENGTH_LONG)
                 .show();
 
-        if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
-            if ( checkSelfPermission(android.Manifest.permission.CALL_PHONE)
-                    == PackageManager.PERMISSION_DENIED ) {
+            if (checkSelfPermission(android.Manifest.permission.CALL_PHONE)
+                    == PackageManager.PERMISSION_DENIED) {
 
                 Log.d(TAG, "permission denied to CALL - requesting it");
                 String[] permissions = {android.Manifest.permission.CALL_PHONE};
@@ -245,7 +244,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + etPhone.getText().toString()));
         Log.e(TAG, "Calling permission: " + intent);
-        if ( ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED ) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -265,9 +264,8 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
         Log.d(TAG, "Permission: " + permissions[0] + " - grantResult: " + grantResults[0]);
 
-        if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED )
-        {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             SmsManager m = SmsManager.getDefault();
             m_map.setMyLocationEnabled(true);
             String text = "Hi, it goes well on the android course...";
@@ -276,14 +274,24 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     }
 
-    private void userLocation()
-    {
+    private void userLocation() {
         LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         Criteria criteria = new Criteria();
 
         String provider = service.getBestProvider(criteria, false);
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location location = service.getLastKnownLocation(provider);
 
         LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
@@ -291,14 +299,13 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         etLocation.setText("Cords: " + userLocation);
     }
 
-    public void getLocation(View view)
-    {
+    public void getLocation(View view) {
         userLocation();
 
         m_map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
-                Log.d(TAG,"Map clicked [" + point.latitude + " / " + point.longitude + "]");
+                Log.d(TAG, "Map clicked [" + point.latitude + " / " + point.longitude + "]");
                 Toast.makeText(DetailActivity.this, "Map cords" + point.latitude + ", " + point.longitude, Toast.LENGTH_SHORT).show();
                 //Do your stuff with LatLng here
                 //Then pass LatLng to other activity
@@ -325,25 +332,34 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         // TODO: Before enabling the My Location layer, you must request
         // location permission from the user. This sample does not include
         // a request for location permission.
-        if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED ) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             m_map.setMyLocationEnabled(true);
         }
         m_map.setOnMyLocationButtonClickListener(this);
         m_map.setOnMyLocationClickListener(this);
 
-  zoomToCurrentLocation();
+        zoomToCurrentLocation();
 
         /*m_map.setMinZoomPreference(6f);
         m_map.setMaxZoomPreference(14f);*/
     }
 
-    private void zoomToCurrentLocation()
-    {
+    private void zoomToCurrentLocation() {
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
 
         Log.d(TAG, "zoomToCurrentLocation: " + location);
