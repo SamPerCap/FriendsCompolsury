@@ -75,7 +75,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-       initMap();
+        initMap();
         setGUI();
     }
 
@@ -278,17 +278,20 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     private void userLocation()
     {
-        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        Criteria criteria = new Criteria();
+            Criteria criteria = new Criteria();
 
-        String provider = service.getBestProvider(criteria, false);
+            String provider = service.getBestProvider(criteria, false);
 
-        Location location = service.getLastKnownLocation(provider);
+            Location location = service.getLastKnownLocation(provider);
 
-        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-        etLocation.setText("Cords: " + userLocation);
+            etLocation.setText("Cords: " + userLocation);
+        }
     }
 
     public void getLocation(View view)
@@ -326,13 +329,14 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         // location permission from the user. This sample does not include
         // a request for location permission.
         if ( ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED ) {
+                == PackageManager.PERMISSION_GRANTED )
+        {
             m_map.setMyLocationEnabled(true);
         }
         m_map.setOnMyLocationButtonClickListener(this);
         m_map.setOnMyLocationClickListener(this);
 
-  zoomToCurrentLocation();
+        zoomToCurrentLocation();
 
         /*m_map.setMinZoomPreference(6f);
         m_map.setMaxZoomPreference(14f);*/
@@ -340,24 +344,47 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     private void zoomToCurrentLocation()
     {
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
-
-        Log.d(TAG, "zoomToCurrentLocation: " + location);
-        if (location != null)
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
         {
-            m_map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
 
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            m_map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
 
-    }}
+            Log.d(TAG, "zoomToCurrentLocation: " + location);
+            if (location != null) {
+                m_map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                m_map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        }
+    }
+
+    public void goToCamera(View view)
+    {
+        Log.e(TAG, "What happens?");
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if ( cameraIntent.resolveActivity(getPackageManager()) != null ) {
+            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+
+                if ( checkSelfPermission(Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED ) {
+
+                    Log.d(TAG, "permission denied to CAMERA - requesting it");
+                    String[] permissions = {Manifest.permission.CAMERA};
+
+                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                }
+            }
+            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
+            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
 }
