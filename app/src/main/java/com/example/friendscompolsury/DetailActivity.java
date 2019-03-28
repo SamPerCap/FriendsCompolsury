@@ -276,10 +276,34 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     }
 
-    public void getLocation(View view) {
-        BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-        final LatLng ROUND = new LatLng(f.getM_location_x(), f.getM_location_y());
-        etLocation.setText("Cords: " + ROUND);
+    private void userLocation()
+    {
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+
+        String provider = service.getBestProvider(criteria, false);
+
+        Location location = service.getLastKnownLocation(provider);
+
+        LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+        etLocation.setText("Cords: " + userLocation);
+    }
+
+    public void getLocation(View view)
+    {
+        userLocation();
+
+        m_map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                Log.d(TAG,"Map clicked [" + point.latitude + " / " + point.longitude + "]");
+                Toast.makeText(DetailActivity.this, "Map cords" + point.latitude + ", " + point.longitude, Toast.LENGTH_SHORT).show();
+                //Do your stuff with LatLng here
+                //Then pass LatLng to other activity
+            }
+        });
     }
 
     @Override
