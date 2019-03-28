@@ -33,10 +33,10 @@ public class SQLiteImplementation implements IDataCRUD {
     @Override
     public long addPerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Adding a new person.");
-        this.insertStmt.bindString(1, p.getName());
+        this.insertStmt.bindString(1, p.getM_name());
         this.insertStmt.bindString(2, "12345678");
         long id = this.insertStmt.executeInsert();
-        p. = id;
+        p.setM_id(id);
         return id;
     }
 
@@ -54,7 +54,7 @@ public class SQLiteImplementation implements IDataCRUD {
 
     @Override
     public void updatePerson(BEFriend p) {
-        Log.d(MainActivity.TAG, "Updating a person " + p.m_id);
+        Log.d(MainActivity.TAG, "Updating a person " + p.getM_id());
 
     }
 
@@ -69,10 +69,10 @@ public class SQLiteImplementation implements IDataCRUD {
         if (cursor.moveToFirst()) {
             do {
                 //For each column it will take a value.
-                list.add(new BEFriend(cursor.getInt(0), cursor.getString(1),
-                        cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
-                        cursor.getString(5), cursor.getString(6), cursor.getString(7),
-                        cursor.getInt(8)));
+                list.add(new BEFriend(cursor.getLong(0), cursor.getString(1),
+                        cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                        cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
+                        cursor.getFloat(8), cursor.getInt(9)));
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()) {
@@ -88,10 +88,10 @@ public class SQLiteImplementation implements IDataCRUD {
         Cursor cursor = db.rawQuery(selectQuery, new String[]{"" + id});
         if (cursor.moveToFirst()) {
             //For each column it will take a value.
-            return new BEFriend(cursor.getInt(0), cursor.getString(1),
-                    cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
-                    cursor.getString(5), cursor.getString(6), cursor.getString(7),
-                    cursor.getInt(8));
+            return new BEFriend(cursor.getLong(0), cursor.getString(1),
+                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                    cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
+                    cursor.getFloat(8), cursor.getInt(9));
         }
         throw new IllegalArgumentException("Could not get Person by Id " + id);
     }

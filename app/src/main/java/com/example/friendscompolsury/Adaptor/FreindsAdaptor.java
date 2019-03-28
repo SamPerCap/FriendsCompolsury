@@ -37,8 +37,8 @@ public class FreindsAdaptor extends ArrayAdapter<BEFriend> {
         TextView txtTitle = (TextView) rowView.findViewById(R.id.textView);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.image);
 
-        txtTitle.setText(friends.get(position).getName());
-        imageView.setImageResource(friends.get(position).getPicture());
+        txtTitle.setText(friends.get(position).getM_name());
+        imageView.setImageResource(friends.get(position).getM_img());
         return rowView;
 
     };

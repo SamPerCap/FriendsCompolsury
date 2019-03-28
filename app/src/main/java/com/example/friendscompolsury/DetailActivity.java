@@ -96,9 +96,10 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
                 m_map = googleMap;
 
                 BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-                final LatLng ROUND = new LatLng(f.getFriendLocationV2(), f.getFriendLocationV1());
+                final LatLng ROUND = new LatLng(f.getM_location_x(), f.getM_location_y());
 
-                friend_marker = new MarkerOptions().alpha((float) 0.3).position(ROUND).title(f.getName() + " lives here!");
+                friend_marker = new MarkerOptions().alpha((float) 0.3).position(ROUND).title(f.getM_name()
+                        + " lives here!");
 
                 m_map.addMarker(friend_marker);
             }
@@ -108,12 +109,12 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     private void setGUI() {
         BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
         Log.d(TAG, "setGUI: " + f.toString());
-        etName.setText(f.getName());
-        etEmail.setText(f.getEmail());
+        etName.setText(f.getM_name());
+        etEmail.setText(f.getM_email());
 
-        etPhone.setText(f.getPhone());
-        cbFavorite.setChecked(f.isFavorite());
-        mImageView.setImageResource(f.getPicture());
+        etPhone.setText(f.getM_phone());
+        cbFavorite.setChecked(true);
+        mImageView.setImageResource(f.getM_img());
     }
 
     private void sendSMS() {
@@ -277,7 +278,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     public void getLocation(View view) {
         BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-        final LatLng ROUND = new LatLng(f.getFriendLocationV2(), f.getFriendLocationV1());
+        final LatLng ROUND = new LatLng(f.getM_location_x(), f.getM_location_y());
         etLocation.setText("Cords: " + ROUND);
     }
 
