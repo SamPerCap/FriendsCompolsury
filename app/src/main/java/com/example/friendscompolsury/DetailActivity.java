@@ -1,4 +1,4 @@
-package dk.easv.friendsv2;
+package com.example.friendscompolsury;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -33,7 +34,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import dk.easv.friendsv2.Model.BEFriend;
+import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener,

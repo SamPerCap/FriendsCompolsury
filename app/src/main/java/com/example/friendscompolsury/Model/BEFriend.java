@@ -1,4 +1,4 @@
-package dk.easv.friendsv2.Model;
+package com.example.friendscompolsury.Model;
 
 
 
@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public class BEFriend implements Serializable {
 
+    private int m_id;
     private String m_name;
     private String m_phone;
     private String m_email;
@@ -14,11 +15,14 @@ public class BEFriend implements Serializable {
     private Boolean m_isFavorite;
     private int m_img;
 
-    public BEFriend(String name, String phone, String email, double location, double locationv2 , int img) {
-        this(name, phone, email, location, locationv2 ,false, img);
+    public BEFriend(int id, String name, String phone, String email, double location,
+                    double locationv2 , int img) {
+        this(id, name, phone, email, location, locationv2 ,false, img);
     }
 
-    public BEFriend(String name, String phone, String email, double locationv1, double locationV2, Boolean isFavorite, int img) {
+    public BEFriend(int id, String name, String phone, String email, double locationv1,
+                    double locationV2, Boolean isFavorite, int img) {
+        m_id = id;
         m_name = name;
         m_phone = phone;
         m_email = email;
@@ -43,7 +47,7 @@ public class BEFriend implements Serializable {
         return m_locationV1;
     }
 
-
+    public int getID(){ return m_id}
 
     public String getName() {
         return m_name;

@@ -1,4 +1,6 @@
-package dk.easv.friendsv2.Model;
+package com.example.friendscompolsury;
+
+import com.example.friendscompolsury.Model.BEFriend;
 
 import java.util.ArrayList;
 

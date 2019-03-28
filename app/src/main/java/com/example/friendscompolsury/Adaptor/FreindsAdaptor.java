@@ -1,4 +1,4 @@
-package dk.easv.friendsv2.Adaptor;
+package com.example.friendscompolsury.Adaptor;
 
 import android.app.Activity;
 import android.util.Log;
@@ -9,10 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.friendscompolsury.Model.BEFriend;
+
 import java.util.ArrayList;
 
-import dk.easv.friendsv2.Model.BEFriend;
-import dk.easv.friendsv2.Model.Friends;
 import dk.easv.friendsv2.R;
 
 public class FreindsAdaptor extends ArrayAdapter<BEFriend> {

@@ -1,24 +1,20 @@
-package dk.easv.friendsv2;
+package com.example.friendscompolsury;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.example.friendscompolsury.Adaptor.FreindsAdaptor;
+import com.example.friendscompolsury.Model.BEFriend;
 
 import java.util.ArrayList;
 
-import dk.easv.friendsv2.Adaptor.FreindsAdaptor;
-import dk.easv.friendsv2.Model.BEFriend;
-import dk.easv.friendsv2.Model.Friends;
+import dk.easv.friendsv2.R;
 
 public class MainActivity extends Activity {
 

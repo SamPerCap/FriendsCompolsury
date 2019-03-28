@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.example.friendscompolsury.Model.BEFriend;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,12 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
-    public long addPerson(BEPerson p) {
+    public long addPerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Adding a new person.");
-        this.insertStmt.bindString(1, p.m_name);
+        this.insertStmt.bindString(1, p.getName());
         this.insertStmt.bindString(2, "12345678");
         long id = this.insertStmt.executeInsert();
-        p.m_id = id;
+        p. = id;
         return id;
     }
 
@@ -51,15 +53,15 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
-    public void updatePerson(BEPerson p) {
+    public void updatePerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Updating a person " + p.m_id);
 
     }
 
     @Override
-    public List<BEPerson> getAllPersons() {
+    public List<BEFriend> getAllPersons() {
         Log.d(MainActivity.TAG, "Getting all persons");
-        List<BEPerson> list = new ArrayList<BEPerson>();
+        List<BEFriend> list = new ArrayList<BEFriend>();
         Cursor cursor = this.db.query(TABLE_NAME,
                 new String[]{"id", "name", "phone", "address", "location", "mail", "website", "birthday", "picture"},
                 null, null,
@@ -67,7 +69,7 @@ public class SQLiteImplementation implements IDataCRUD {
         if (cursor.moveToFirst()) {
             do {
                 //For each column it will take a value.
-                list.add(new BEPerson(cursor.getInt(0), cursor.getString(1),
+                list.add(new BEFriend(cursor.getInt(0), cursor.getString(1),
                         cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
                         cursor.getString(5), cursor.getString(6), cursor.getString(7),
                         cursor.getInt(8)));
@@ -80,13 +82,13 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
-    public BEPerson getPersonById(long id) {
+    public BEFriend getPersonById(long id) {
         Log.d(MainActivity.TAG,"Getting a person by id " + id);
         String selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE id = ?";
         Cursor cursor = db.rawQuery(selectQuery, new String[]{"" + id});
         if (cursor.moveToFirst()) {
             //For each column it will take a value.
-            return new BEPerson(cursor.getInt(0), cursor.getString(1),
+            return new BEFriend(cursor.getInt(0), cursor.getString(1),
                     cursor.getString(2), cursor.getString(3), cursor.getFloat(4),
                     cursor.getString(5), cursor.getString(6), cursor.getString(7),
                     cursor.getInt(8));
