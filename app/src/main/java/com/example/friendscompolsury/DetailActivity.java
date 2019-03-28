@@ -345,6 +345,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     private void zoomToCurrentLocation()
     {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED)
         {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
