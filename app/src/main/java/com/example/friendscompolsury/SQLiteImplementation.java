@@ -14,11 +14,13 @@ import java.util.List;
 
 public class SQLiteImplementation implements IDataCRUD {
 
+    private static String TAG = MainActivity.TAG;
     private static final String DATABASE_NAME = "agenda.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME = "contacts_table";
     private static final String INSERT = "insert into " + TABLE_NAME
-            + "(name, phone, adress, location, mail, website, birthday, picture) values (?,?,?,?,?,?,?,?)";
+            + "(name, address, number, email, website, birthday ,location_x, location_y, picture)" +
+            " values (?,?,?,?,?,?,?,?,?)";
     private SQLiteDatabase db;
     private SQLiteStatement insertStmt;
 
@@ -34,7 +36,14 @@ public class SQLiteImplementation implements IDataCRUD {
     public long addPerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Adding a new person.");
         this.insertStmt.bindString(1, p.getM_name());
-        this.insertStmt.bindString(2, "12345678");
+        this.insertStmt.bindString(2, p.getM_address());
+        this.insertStmt.bindString(3, p.getM_phone());
+        this.insertStmt.bindString(4, p.getM_email());
+        this.insertStmt.bindString(5, p.getM_webSite());
+        this.insertStmt.bindString(6, p.getM_birthday());
+        this.insertStmt.bindDouble(7, p.getM_location_x());
+        this.insertStmt.bindDouble(8, p.getM_location_y());
+        this.insertStmt.bindDouble(9, p.getM_img());
         long id = this.insertStmt.executeInsert();
         p.setM_id(id);
         return id;
@@ -63,7 +72,8 @@ public class SQLiteImplementation implements IDataCRUD {
         Log.d(MainActivity.TAG, "Getting all persons");
         List<BEFriend> list = new ArrayList<BEFriend>();
         Cursor cursor = this.db.query(TABLE_NAME,
-                new String[]{"id", "name", "phone", "address", "location", "mail", "website", "birthday", "picture"},
+                new String[]{"id", "name", "address", "number","email","website", "birthday", "location_x",
+                        "location_y", "picture"},
                 null, null,
                 null, null, "name");
         if (cursor.moveToFirst()) {
@@ -104,10 +114,10 @@ public class SQLiteImplementation implements IDataCRUD {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+            Log.d(MainActivity.TAG, "onCreate: table");
             db.execSQL("CREATE TABLE " + TABLE_NAME
-                    + " (id INTEGER PRIMARY KEY, name TEXT, phone TEXT, address TEXT, location REAL," +
-                    " mail TEXT, website TEXT, birthday TEXT, picture INTEGER)");
-
+                    + " (id INTEGER PRIMARY KEY, name TEXT, address TEXT, number TEXT, email TEXT," +
+                    "website TEXT,birthday TEXT,  location_x REAL, location_y REAL, picture INTEGER)");
         }
 
         @Override
@@ -116,6 +126,7 @@ public class SQLiteImplementation implements IDataCRUD {
 
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
             onCreate(db);
+            Log.d(TAG,"Table should have been created");
         }
     }
 }

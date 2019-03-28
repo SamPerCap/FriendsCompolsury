@@ -20,7 +20,12 @@ public class Friends {
 	
 	public ArrayList<BEFriend> getAll()
 	{ return m_friends; }
-	
+	public void setArraylistFried (ArrayList<BEFriend> arraylistFried)
+	{
+		m_friends.clear();
+		m_friends.addAll(arraylistFried);
+
+	}
 	public String[] getNames()
 	{
 		String[] res = new String[m_friends.size()];
