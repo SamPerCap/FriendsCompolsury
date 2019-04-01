@@ -1,10 +1,12 @@
 package com.example.friendscompolsury;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,24 +15,27 @@ import com.example.friendscompolsury.Adaptor.FreindsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dk.easv.friendsv2.R;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     public static String TAG = "Friend2";
     ListView list;
     Friends m_friends;
     Context context = this;
     ArrayList<BEFriend> friends;
+    IDataCRUD dataCRUD;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
         m_friends = new Friends();
 
-        IDataCRUD dataCRUD = new SQLiteImplementation(this);
-        FreindsAdaptor adapter=new FreindsAdaptor(this, (ArrayList)dataCRUD.getAllPersons(),m_friends.getNames() );
+        dataCRUD = new SQLiteImplementation(this);
+        FreindsAdaptor adapter=new FreindsAdaptor(this,(ArrayList<BEFriend>) dataCRUD.getAllPersons(),m_friends.getNames() );
+
         list=(ListView)findViewById(R.id.listview);
         list.setAdapter(adapter);
 
@@ -74,6 +79,19 @@ public class MainActivity extends Activity {
         x.putExtra("friend", f);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    public void changeSort(MenuItem item) {
+        Log.d(TAG, "sort changing to "+item.getTitle());
+        ArrayList<BEFriend> asd =(ArrayList<BEFriend>)  dataCRUD.getAllPersons();
+        Collections.sort(asd, new CompareSort());
+        FreindsAdaptor adapter=new FreindsAdaptor(this, asd,m_friends.getNames());
+        list.setAdapter(adapter);
+
+    }
 
 }

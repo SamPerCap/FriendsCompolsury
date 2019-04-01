@@ -13,9 +13,9 @@ public class Friends {
 	public Friends()
 	{
 		m_friends = new ArrayList<BEFriend>();
-		m_friends.add(new BEFriend(0, "God","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.jacob));
-		m_friends.add(new BEFriend(1, "God","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.sam));
-		m_friends.add(new BEFriend(2, "God","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.jacob));
+		m_friends.add(new BEFriend(0, "Jacob","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.jacob));
+		m_friends.add(new BEFriend(1, "Sam","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.sam));
+		m_friends.add(new BEFriend(2, "Kris","Sky","6666958", "pray@gmail.com", "www.gottasavetheworld.com", "0-0-0000", 0,1,R.drawable.jacob));
 		}
 	
 	public ArrayList<BEFriend> getAll()
