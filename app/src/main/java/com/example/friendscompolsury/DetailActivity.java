@@ -20,11 +20,9 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,7 +46,6 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     EditText etPhone;
     EditText etEmail;
     EditText etLocation;
-    CheckBox cbFavorite;
     ImageView mImageView;
     GoogleMap m_map;
     private Bitmap mImageBitmap;
@@ -63,7 +60,6 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         etLocation = findViewById(R.id.etLocation);
         etName = findViewById(R.id.etName);
         etPhone = findViewById(R.id.etPhone);
-        cbFavorite = findViewById(R.id.cbFavorite);
         mImageView = findViewById(R.id.pictureView);
 
         MapFragment mapFragment =
@@ -100,14 +96,14 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     }
 
     private void setGUI() {
-        BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-        Log.d(TAG, "setGUI: " + f.toString());
-        etName.setText(f.getM_name());
-        etEmail.setText(f.getM_email());
-
-        etPhone.setText(f.getM_phone());
-        cbFavorite.setChecked(true);
-        mImageView.setImageResource(f.getM_img());
+        for (BEFriend person: MainActivity.dataCRUD.getAllPersons()) {
+        //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
+        Log.d(TAG, "setGUI: " + person.toString());
+        etName.setText(person.getM_name());
+        etEmail.setText(person.getM_email());
+        etPhone.setText(person.getM_phone());
+        mImageView.setImageResource(person.getM_img());
+        }
     }
 
     private void sendSMS() {

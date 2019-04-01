@@ -2,4 +2,13 @@
     <string name="app_name">FriendsCompolsury</string>
     <string name="getPerson">Get Person</string>
     <string name="addPerson">Add Person</string>
+    <string name="Detail">Details</string>
+    <string name="Name">Name</string>
+    <string name="Email">Email</string>
+    <string name="URL">URL</string>
+    <string name="Phone">Phone</string>
+    <string name="SMS">SMS</string>
+    <string name="Cam">Cam</string>
+    <string name="Call">Call</string>
+    <string name="Home">Home</string>
 </resources>

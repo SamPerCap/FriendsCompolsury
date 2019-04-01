@@ -9,11 +9,11 @@
 
     <TextView
         android:id="@+id/tvHeader"
+        style="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Detail"
         android:layout_gravity="center"
-        style="@style/Base.TextAppearance.AppCompat.Large"/>
+        android:text="@string/Detail" />
 
     <ImageView
         android:id="@+id/pictureView"
@@ -31,11 +31,12 @@
             android:layout_height="wrap_content"
             android:padding="5dip">
 
-            <TextView android:text="Name:" />
+            <TextView android:text="@string/Name" />
 
             <EditText
                 android:id="@+id/etName"
-                android:text="Name" />
+                android:hint="@string/Name"
+                android:inputType="textPersonName|text" />
         </TableRow>
 
         <TableRow
@@ -43,11 +44,12 @@
             android:layout_height="wrap_content"
             android:padding="5dip">
 
-            <TextView android:text="Email:" />
+            <TextView android:text="@string/Email" />
 
             <EditText
                 android:id="@+id/etEmail"
-                android:text="Email" />
+                android:hint="@string/Email"
+                android:inputType="textEmailAddress" />
         </TableRow>
 
         <TableRow
@@ -55,11 +57,12 @@
             android:layout_height="match_parent"
             android:padding="5dip">
 
-            <TextView android:text="Url:" />
+            <TextView android:text="@string/URL" />
 
             <EditText
                 android:id="@+id/etLocation"
-                android:text="Url" />
+                android:hint="@string/URL"
+                android:inputType="textUri|textWebEmailAddress" />
         </TableRow>
 
         <TableRow
@@ -67,23 +70,12 @@
             android:layout_height="match_parent"
             android:padding="5dip">
 
-            <TextView android:text="Phone:" />
+            <TextView android:text="@string/Phone" />
 
             <EditText
                 android:id="@+id/etPhone"
-                android:text="Phone" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dip">
-
-            <TextView android:text="Favorite:" />
-
-            <CheckBox
-                android:id="@+id/cbFavorite"
-                android:checked="false" />
+                android:hint="@string/Phone"
+                android:inputType="number|phone" />
         </TableRow>
 
         <!--
@@ -112,49 +104,53 @@
         android:weightSum="4"
         android:padding="2dp" android:layout_margin="1dp">
 
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSMS"
-            android:onClick="smsButton"
-            android:text="SMS"
-            android:layout_weight="1"
-            android:layout_margin="1dp"/>
-
         <Button
-            android:id="@+id/btnCamera"
+            android:id="@+id/btnSMS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:layout_weight="1"
+            android:onClick="smsButton"
+            android:text="@string/SMS" />
+
+        <Button
+            android:id="@+id/btnCamera"
+            android:layout_width="91dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
             android:onClick="camButton"
-            android:text="Cam" />
+            android:text="@string/Cam" />
 
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <Button
             android:id="@+id/btnCALL"
-            android:text="Call"
-            android:onClick="callButton"
-            android:layout_weight="1"
-
-            android:layout_margin="1dp"/>
-
-        <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnEMAIL"
-            android:onClick="mailButton"
-            android:text="Email"
-            android:layout_weight="1"
-
-            android:layout_margin="1dp"/>
-
-        <Button android:id="@+id/btnLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
-            android:onClick="getLocation"
+            android:layout_margin="1dp"
             android:layout_weight="1"
+            android:onClick="callButton"
 
-            android:layout_margin="1dp"/>
+            android:text="@string/Call" />
+
+        <Button
+            android:id="@+id/btnEMAIL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="mailButton"
+
+            android:text="@string/Email" />
+
+        <Button
+            android:id="@+id/btnLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:onClick="getLocation"
+
+            android:text="@string/Home" />
 
     </LinearLayout>
 

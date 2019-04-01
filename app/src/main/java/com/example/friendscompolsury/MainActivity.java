@@ -23,16 +23,23 @@ public class MainActivity extends Activity {
     Friends m_friends;
     Context context = this;
     ArrayList<BEFriend> friends;
+    public static IDataCRUD dataCRUD;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
         m_friends = new Friends();
-
-        IDataCRUD dataCRUD = new SQLiteImplementation(this);
-        m_friends.setArraylistFried((ArrayList)dataCRUD.getAllPersons());
-        FreindsAdaptor adapter=new FreindsAdaptor(this, (ArrayList)dataCRUD.getAllPersons(),m_friends.getNames() );
-        list=(ListView)findViewById(R.id.listview);
+        dataCRUD = new SQLiteImplementation(this);
+        dataCRUD.getAllPersons().clear();
+        dataCRUD.addPerson(new BEFriend(1,"Example", "Street",
+                "000000", "example@gmail.com", "www.example.com",
+                "18-00-2001", 0, 0, 0));
+        dataCRUD.getAllPersons();
+        m_friends.setArraylistFried((ArrayList) dataCRUD.getAllPersons());
+        FreindsAdaptor adapter = new FreindsAdaptor(this, (ArrayList) dataCRUD.getAllPersons(), m_friends.getNames());
+        list = (ListView) findViewById(R.id.listview);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -41,8 +48,8 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-               //BEFriend Slecteditem= m_f;
-                Intent x = new Intent(context,DetailActivity.class);
+                //BEFriend Slecteditem= m_f;
+                Intent x = new Intent(context, DetailActivity.class);
                 Log.d(TAG, "Detail activity will be started");
                 BEFriend friend = m_friends.getAll().get(position);
                 addData(x, friend);
@@ -50,9 +57,6 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "Detail activity is started");
             }
         });
-
-        dataCRUD.addPerson(m_friends.getAll().get(0));
-
     }
 
 
@@ -69,12 +73,10 @@ public class MainActivity extends Activity {
 
     }*/
 
-    private void addData(Intent x, BEFriend f)
-    {
+    private void addData(Intent x, BEFriend f) {
         Log.d(TAG, "addData: " + f.toString());
         x.putExtra("friend", f);
     }
-
 
 
 }
