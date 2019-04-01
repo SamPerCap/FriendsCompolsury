@@ -19,10 +19,24 @@ public class BEFriend implements Serializable {
     private int m_img;
 
     public BEFriend(long m_id, String m_name, String m_address, String m_phone, String m_email,
+                    String m_webSite, String m_birthday, double m_location_x, double m_location_y,
+                    int m_img) {
+        this.m_id = m_id;
+        this.m_name = m_name;
+        this.m_address = m_address;
+        this.m_phone = m_phone;
+        this.m_email = m_email;
+        this.m_webSite = m_webSite;
+        this.m_birthday = m_birthday;
+        this.m_location_x = m_location_x;
+        this.m_location_y = m_location_y;
+        this.m_img = m_img;
+    }
+
+    public BEFriend(String m_name, String m_address, String m_phone, String m_email,
                     String m_webSite, String m_birthday, double m_location_x,
                     double m_location_y, int m_img) {
 
-        this.m_id = m_id;
         this.m_name = m_name;
         this.m_address = m_address;
         this.m_phone = m_phone;

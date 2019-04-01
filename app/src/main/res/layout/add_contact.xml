@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,18 +13,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/Detail" />
+        android:text="@string/NewContact" />
 
     <ImageView
         android:id="@+id/pictureView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:onClick="goToCamera"
+        android:layout_height="wrap_content"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="284dp">
+        android:layout_height="wrap_content">
 
         <TableRow
             android:layout_width="match_parent"
@@ -33,7 +34,7 @@
             <TextView android:text="@string/Name" />
 
             <EditText
-                android:id="@+id/etName"
+                android:id="@+id/etSName"
                 android:hint="@string/Name"
                 android:inputType="textPersonName|text" />
         </TableRow>
@@ -46,7 +47,7 @@
             <TextView android:text="@string/Phone" />
 
             <EditText
-                android:id="@+id/etPhone"
+                android:id="@+id/etSPhone"
                 android:hint="@string/Phone"
                 android:inputType="number|phone" />
         </TableRow>
@@ -59,7 +60,7 @@
             <TextView android:text="@string/Address" />
 
             <EditText
-                android:id="@+id/etAddress"
+                android:id="@+id/etSAddress"
                 android:hint="@string/Address"
                 android:inputType="text|textPostalAddress" />
         </TableRow>
@@ -72,7 +73,7 @@
             <TextView android:text="@string/Email" />
 
             <EditText
-                android:id="@+id/etEmail"
+                android:id="@+id/etSEmail"
                 android:hint="@string/Email"
                 android:inputType="textEmailAddress" />
         </TableRow>
@@ -85,7 +86,7 @@
             <TextView android:text="@string/URL" />
 
             <EditText
-                android:id="@+id/etURL"
+                android:id="@+id/etSURL"
                 android:hint="@string/URL"
                 android:inputType="textWebEditText|text" />
         </TableRow>
@@ -98,98 +99,19 @@
             <TextView android:text="@string/Birthday" />
 
             <EditText
-                android:id="@+id/etBirthday"
+                android:id="@+id/etSBirthday"
                 android:hint="@string/Birthday"
                 android:inputType="datetime|text" />
         </TableRow>
-        <!--
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dip" >
 
-            <Button
-                android:id="@+id/btnCancel"
-                android:text="Cancel"
-                android:layout_gravity="center"/>
-
-            <Button
-                android:id="@+id/btnOk"
-                android:text="OK"
-                android:layout_gravity="center"/>
-        </TableRow>
-        -->
     </TableLayout>
 
-    <LinearLayout
-        android:id="@+id/LinearLayout01"
+    <Button
+        android:id="@+id/SaveContactButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="1dp"
-        android:padding="2dp"
-        android:weightSum="4">
-
-        <Button
-            android:id="@+id/btnSMS"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:onClick="smsButton"
-            android:text="@string/SMS" />
-
-        <Button
-            android:id="@+id/btnCamera"
-            android:layout_width="91dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:onClick="camButton"
-            android:text="@string/Cam" />
-
-        <Button
-            android:id="@+id/btnCALL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:onClick="callButton"
-
-            android:text="@string/Call" />
-
-        <Button
-            android:id="@+id/btnEMAIL"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:onClick="mailButton"
-
-            android:text="@string/Email" />
-
-        <Button
-            android:id="@+id/btnLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:onClick="getLocation"
-
-            android:text="@string/Home" />
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.MapFragment"
-            android:layout_width="421dp"
-            android:layout_height="match_parent" />
-    </FrameLayout>
-
+        android:text="@string/SaveContact"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

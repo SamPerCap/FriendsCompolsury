@@ -11,4 +11,8 @@
     <string name="Cam">Cam</string>
     <string name="Call">Call</string>
     <string name="Home">Home</string>
+    <string name="NewContact">New Contact</string>
+    <string name="SaveContact">Save</string>
+    <string name="Address">Address</string>
+    <string name="Birthday">Birthday</string>
 </resources>

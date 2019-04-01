@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -41,11 +42,9 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
+    IDataCRUD _dataCRUD = MainActivity.dataCRUD;
     MarkerOptions friend_marker;
-    EditText etName;
-    EditText etPhone;
-    EditText etEmail;
-    EditText etLocation;
+    EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     private Bitmap mImageBitmap;
@@ -56,12 +55,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "Detail Activity started");
 
-        etEmail = findViewById(R.id.etEmail);
-        etLocation = findViewById(R.id.etLocation);
-        etName = findViewById(R.id.etName);
-        etPhone = findViewById(R.id.etPhone);
-        mImageView = findViewById(R.id.pictureView);
-
+        LocateItems();
         MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -69,7 +63,19 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         setGUI();
     }
 
+    private void LocateItems() {
+        Log.d(TAG, "Locating items");
+        etEmail = findViewById(R.id.etEmail);
+        etAddress = findViewById(R.id.etAddress);
+        etName = findViewById(R.id.etName);
+        etPhone = findViewById(R.id.etPhone);
+        etURL = findViewById(R.id.etURL);
+        mImageView = findViewById(R.id.pictureView);
+        etBirthday = findViewById(R.id.etBirthday);
+    }
+
     private void initMap() {
+        Log.d(TAG, "Initializating map");
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             //  m_map.setMyLocationEnabled(true);
@@ -96,17 +102,22 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     }
 
     private void setGUI() {
-        for (BEFriend person: MainActivity.dataCRUD.getAllPersons()) {
-        //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-        Log.d(TAG, "setGUI: " + person.toString());
-        etName.setText(person.getM_name());
-        etEmail.setText(person.getM_email());
-        etPhone.setText(person.getM_phone());
-        mImageView.setImageResource(person.getM_img());
+        if (_dataCRUD.getAllPersons().size() < 0) {
+            Log.d(TAG, "The database is empty");
+        } else {
+            for (BEFriend person : _dataCRUD.getAllPersons()) {
+                //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
+                Log.d(TAG, "setGUI: " + person.toString());
+                etName.setText(person.getM_name());
+                etEmail.setText(person.getM_email());
+                etPhone.setText(person.getM_phone());
+                mImageView.setImageResource(person.getM_img());
+            }
         }
     }
 
     private void sendSMS() {
+        Log.d(TAG, "sendSMS method invoked");
         Toast.makeText(this, "An sms will be send", Toast.LENGTH_LONG)
                 .show();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -223,14 +234,14 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
                 return;
 
             } else {
-                makeCalle();
+                makeCall();
                 Log.d(TAG, "permission to CALL granted!");
             }
         }
-        makeCalle();
+        makeCall();
     }
 
-    private void makeCalle() {
+    private void makeCall() {
         Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse("tel:" + etPhone.getText().toString()));
         Log.e(TAG, "Calling permission: " + intent);
@@ -279,7 +290,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-            etLocation.setText("Cords: " + userLocation);
+            etAddress.setText("Cords: " + userLocation);
         }
     }
 

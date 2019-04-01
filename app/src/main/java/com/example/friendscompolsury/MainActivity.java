@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
     public static String TAG = "Friend2";
     ListView list;
     Friends m_friends;
+    FloatingActionButton addContactButton;
     Context context = this;
     ArrayList<BEFriend> friends;
     public static IDataCRUD dataCRUD;
@@ -31,12 +33,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
         m_friends = new Friends();
+
         dataCRUD = new SQLiteImplementation(this);
         dataCRUD.getAllPersons().clear();
-        dataCRUD.addPerson(new BEFriend(1,"Example", "Street",
+        dataCRUD.addPerson(new BEFriend("Example", "Street",
                 "000000", "example@gmail.com", "www.example.com",
                 "18-00-2001", 0, 0, 0));
-        dataCRUD.getAllPersons();
+
         m_friends.setArraylistFried((ArrayList) dataCRUD.getAllPersons());
         FreindsAdaptor adapter = new FreindsAdaptor(this, (ArrayList) dataCRUD.getAllPersons(), m_friends.getNames());
         list = (ListView) findViewById(R.id.listview);
@@ -55,6 +58,13 @@ public class MainActivity extends Activity {
                 addData(x, friend);
                 startActivity(x);
                 Log.d(TAG, "Detail activity is started");
+            }
+        });
+        addContactButton = (FloatingActionButton) findViewById(R.id.addNewContact);
+        addContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AddContactActivity.class));
             }
         });
     }
