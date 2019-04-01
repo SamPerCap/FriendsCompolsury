@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Context context = this;
     ArrayList<BEFriend> friends;
     IDataCRUD dataCRUD;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dataCRUD.addPerson(m_friends.getAll().get(0));
-
-    }
+}
 
 
    /* @Override
