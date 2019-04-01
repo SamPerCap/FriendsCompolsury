@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
     Friends m_friends;
     Context context = this;
     ArrayList<BEFriend> friends;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
         m_friends = new Friends();
 
         IDataCRUD dataCRUD = new SQLiteImplementation(this);
-        m_friends.setArraylistFried((ArrayList)dataCRUD.getAllPersons());
+
         FreindsAdaptor adapter=new FreindsAdaptor(this, (ArrayList)dataCRUD.getAllPersons(),m_friends.getNames() );
         list=(ListView)findViewById(R.id.listview);
         list.setAdapter(adapter);
@@ -52,8 +53,7 @@ public class MainActivity extends Activity {
         });
 
         dataCRUD.addPerson(m_friends.getAll().get(0));
-
-    }
+}
 
 
    /* @Override

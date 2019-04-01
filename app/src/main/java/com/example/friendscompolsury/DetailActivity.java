@@ -51,6 +51,8 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     CheckBox cbFavorite;
     ImageView mImageView;
     GoogleMap m_map;
+    BEFriend f;
+
     private Bitmap mImageBitmap;
 
     @Override
@@ -311,7 +313,18 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
     @Override
     public void onMyLocationClick(@NonNull Location location) {
+        f = (BEFriend) getIntent().getSerializableExtra("friend");
         Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+        Intent x = new Intent(this, MapActivity.class);
+        addData(x, f);
+        Log.d(TAG, "Detail activity will be started");
+        startActivity(x);
+        Log.d(TAG, "Detail activity is started");
+    }
+
+    private void addData(Intent x, BEFriend f)
+    {
+        x.putExtra("friend", f);
     }
 
     @Override
