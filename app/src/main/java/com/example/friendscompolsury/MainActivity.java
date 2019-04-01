@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.friendscompolsury.Adaptor.FreindsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
+import com.example.friendscompolsury.Model.Comparator.CompareSort;
 
 import java.util.ArrayList;
 import java.util.Collections;
