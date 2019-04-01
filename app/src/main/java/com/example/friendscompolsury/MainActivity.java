@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
         m_friends = new Friends();
 
         IDataCRUD dataCRUD = new SQLiteImplementation(this);
-        m_friends.setArraylistFried((ArrayList)dataCRUD.getAllPersons());
         FreindsAdaptor adapter=new FreindsAdaptor(this, (ArrayList)dataCRUD.getAllPersons(),m_friends.getNames() );
         list=(ListView)findViewById(R.id.listview);
         list.setAdapter(adapter);
