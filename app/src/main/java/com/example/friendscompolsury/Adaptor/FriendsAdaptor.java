@@ -9,36 +9,43 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.friendscompolsury.DataAccessFactory;
+import com.example.friendscompolsury.IDataCRUD;
+import com.example.friendscompolsury.MainActivity;
 import com.example.friendscompolsury.Model.BEFriend;
 
 import java.util.ArrayList;
 
 import dk.easv.friendsv2.R;
 
-public class FreindsAdaptor extends ArrayAdapter<BEFriend> {
+public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
 
     private final Activity context;
     private final ArrayList<BEFriend> friends;
+    private String TAG = MainActivity.TAG;
+    DataAccessFactory _dataAccess;
+    IDataCRUD _dataCRUD = _dataAccess.getInstance();
 
-    public FreindsAdaptor(Activity context, ArrayList<BEFriend> friends, String[] friendsName) {
+    public FriendsAdaptor(Activity context, ArrayList<BEFriend> friends) {
         super(context, R.layout.simple_list_item_with_image,friends );
         // TODO Auto-generated constructor stub
-        Log.d("hey", "hello: ");
-
+        Log.d(TAG, "FriendsAdaptor invoked");
         this.context=context;
         this.friends=friends;
     }
 
     public View getView(int position, View view, ViewGroup parent) {
-        Log.d("hey", "getView: ");
+        Log.d(TAG, "Getting the view from Friends Adapter ");
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.simple_list_item_with_image, null,true);
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.textView);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.image);
 
-        txtTitle.setText(friends.get(position).getM_name());
-        imageView.setImageResource(friends.get(position).getM_img());
+        for (BEFriend person: friends){
+            txtTitle.setText(person.getM_name());
+            imageView.setImageResource(person.getM_img());
+        }
         return rowView;
 
     };

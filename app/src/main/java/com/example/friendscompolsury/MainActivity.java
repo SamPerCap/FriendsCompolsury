@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.friendscompolsury.Adaptor.FreindsAdaptor;
+import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.example.friendscompolsury.Model.Comparator.CompareSort;
 
@@ -25,26 +25,26 @@ public class MainActivity extends AppCompatActivity {
 
     public static String TAG = "Friend2";
     ListView list;
-    Friends m_friends;
     FloatingActionButton addContactButton;
     Context context = this;
-    ArrayList<BEFriend> friends;
-    public static IDataCRUD dataCRUD;
-
+    BEFriend _friends;
+    ArrayList<BEFriend> friendsList = new ArrayList<>();
+    DataAccessFactory _dataAccess;
+    IDataCRUD _dataCRUD;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
-        m_friends = new Friends();
-
-        dataCRUD = new SQLiteImplementation(this);
-        dataCRUD.getAllPersons().clear();
-        dataCRUD.addPerson(new BEFriend("Example", "Street",
+        _dataAccess.init(MainActivity.this);
+        _dataCRUD = _dataAccess.getInstance();
+        _dataCRUD.getAllPersons().clear();
+        _dataCRUD.addPerson(new BEFriend("Example", "Street",
                 "000000", "example@gmail.com", "www.example.com",
-                "18-00-2001", 0, 0, 0));
-
-        m_friends.setArraylistFried((ArrayList) dataCRUD.getAllPersons());
-        FreindsAdaptor adapter = new FreindsAdaptor(this, (ArrayList) dataCRUD.getAllPersons(), m_friends.getNames());
+                "18-00-2001", 0, 0, R.drawable.lupa));
+        for (BEFriend person : _dataCRUD.getAllPersons()){
+        friendsList.add(person);
+        }
+        FriendsAdaptor adapter = new FriendsAdaptor(this, friendsList);
         list = (ListView) findViewById(R.id.listview);
         list.setAdapter(adapter);
 
@@ -54,12 +54,11 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-                //BEFriend Slecteditem= m_f;
-                Intent x = new Intent(context, DetailActivity.class);
+                Intent intent = new Intent(context, DetailActivity.class);
                 Log.d(TAG, "Detail activity will be started");
-                BEFriend friend = m_friends.getAll().get(position);
-                addData(x, friend);
-                startActivity(x);
+                //_dataCRUD.getAll().get(position);
+                addData(intent, _friends);
+                startActivity(intent);
                 Log.d(TAG, "Detail activity is started");
             }
         });
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     private void addData(Intent x, BEFriend f) {
-        Log.d(TAG, "addData: " + f.toString());
+        Log.d(TAG, "adding Data to details");
         x.putExtra("friend", f);
     }
 
@@ -99,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeSort(MenuItem item) {
         Log.d(TAG, "sort changing to "+item.getTitle());
-        ArrayList<BEFriend> asd =(ArrayList<BEFriend>)  dataCRUD.getAllPersons();
+        ArrayList<BEFriend> asd =(ArrayList<BEFriend>) _dataCRUD.getAllPersons();
         Collections.sort(asd, new CompareSort());
-        FreindsAdaptor adapter=new FreindsAdaptor(this, asd,m_friends.getNames());
-        list.setAdapter(adapter);
+        //FriendsAdaptor adapter=new FriendsAdaptor(this, asd, friendsList);
+        //list.setAdapter(adapter);
 
     }
 }
