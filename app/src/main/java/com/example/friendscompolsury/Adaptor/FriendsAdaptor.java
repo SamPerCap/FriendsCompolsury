@@ -1,6 +1,7 @@
 package com.example.friendscompolsury.Adaptor;
 
 import android.app.Activity;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,7 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
 
         for (BEFriend person: friends){
             txtTitle.setText(person.getM_name());
-            imageView.setImageResource(person.getM_img());
+            imageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
         }
         return rowView;
 

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -71,7 +72,14 @@ public class DetailActivity extends FragmentActivity {
                 etAddress.setText(person.getM_address());
                 etBirthday.setText(person.getM_birthday());
                 etURL.setText(person.getM_webSite());
-                mImageView.setImageResource(person.getM_img());
+                try {
+                    mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
+                }
+                catch (Exception ex)
+                {
+                    Log.d(TAG, "Can't parse this to image: " + person.getM_img());
+                    Log.d(TAG, ""+ex);
+                }
             }
         }
     }

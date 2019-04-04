@@ -43,7 +43,7 @@ public class SQLiteImplementation implements IDataCRUD {
         this.insertStmt.bindString(6, p.getM_birthday());
         this.insertStmt.bindDouble(7, p.getM_location_x());
         this.insertStmt.bindDouble(8, p.getM_location_y());
-        this.insertStmt.bindDouble(9, p.getM_img());
+        this.insertStmt.bindString(9, p.getM_img());
         long id = this.insertStmt.executeInsert();
         p.setM_id(id);
         return id;
@@ -83,7 +83,7 @@ public class SQLiteImplementation implements IDataCRUD {
                 list.add(new BEFriend(cursor.getLong(0), cursor.getString(1),
                         cursor.getString(2), cursor.getString(3), cursor.getString(4),
                         cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
-                        cursor.getFloat(8), cursor.getInt(9)));
+                        cursor.getFloat(8), cursor.getString(9)));
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()) {
@@ -102,7 +102,7 @@ public class SQLiteImplementation implements IDataCRUD {
             return new BEFriend(cursor.getLong(0), cursor.getString(1),
                     cursor.getString(2), cursor.getString(3), cursor.getString(4),
                     cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
-                    cursor.getFloat(8), cursor.getInt(9));
+                    cursor.getFloat(8), cursor.getString(9));
         }
         throw new IllegalArgumentException("Could not get Person by Id " + id);
     }
@@ -118,7 +118,7 @@ public class SQLiteImplementation implements IDataCRUD {
             Log.d(MainActivity.TAG, "onCreate: table");
             db.execSQL("CREATE TABLE " + TABLE_NAME
                     + " (id INTEGER PRIMARY KEY, name TEXT, address TEXT, number TEXT, email TEXT," +
-                    "website TEXT,birthday TEXT,  location_x REAL, location_y REAL, picture INTEGER)");
+                    "website TEXT,birthday TEXT,  location_x REAL, location_y REAL, picture TEXT)");
         }
 
         @Override

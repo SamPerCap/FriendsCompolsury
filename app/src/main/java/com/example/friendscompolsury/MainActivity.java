@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         _dataCRUD.getAllPersons().clear();
         _dataCRUD.addPerson(new BEFriend("Example", "Street",
                 "000000", "example@gmail.com", "www.example.com",
-                "18-00-2001", 0, 0, R.drawable.lupa));
+                "18-00-2001", 0, 0, "DCIM/Camere/hej.jpg"));
         for (BEFriend person : _dataCRUD.getAllPersons()){
         friendsList.add(person);
         }
