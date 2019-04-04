@@ -20,8 +20,8 @@
         android:layout_height="wrap_content">
 
         <TableRow
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center">
 
             <ImageView
@@ -51,6 +51,19 @@
             android:layout_height="match_parent"
             android:padding="5dip">
 
+            <TextView android:text="@string/Email" />
+
+            <EditText
+                android:id="@+id/etSEmail"
+                android:hint="@string/Email"
+                android:inputType="textEmailAddress" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
             <TextView android:text="@string/Phone" />
 
             <EditText
@@ -70,19 +83,6 @@
                 android:id="@+id/etSAddress"
                 android:hint="@string/Address"
                 android:inputType="text|textPostalAddress" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dip">
-
-            <TextView android:text="@string/Email" />
-
-            <EditText
-                android:id="@+id/etSEmail"
-                android:hint="@string/Email"
-                android:inputType="textEmailAddress" />
         </TableRow>
 
         <TableRow
