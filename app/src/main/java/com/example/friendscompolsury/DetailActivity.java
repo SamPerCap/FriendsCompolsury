@@ -58,9 +58,9 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         Log.d(TAG, "Detail Activity started");
 
         LocateItems();
-        MapFragment mapFragment =
+        /*MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(this);*/
         initMap();
         setGUI();
     }
@@ -70,14 +70,14 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         etEmail = findViewById(R.id.etEmail);
         etAddress = findViewById(R.id.etAddress);
         etName = findViewById(R.id.etName);
-        etPhone = findViewById(R.id.etSPhone);
+        etPhone = findViewById(R.id.etPhone);
         etURL = findViewById(R.id.etURL);
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
     }
 
     private void initMap() {
-        Log.d(TAG, "Initializating map");
+        /*Log.d(TAG, "Initializating map");
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             //  m_map.setMyLocationEnabled(true);
@@ -100,7 +100,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
 
                 m_map.addMarker(friend_marker);
             }
-        });
+        });*/
     }
 
     private void setGUI() {
