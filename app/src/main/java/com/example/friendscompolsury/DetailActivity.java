@@ -15,12 +15,15 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.webkit.PermissionRequest;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.File;
 
 import dk.easv.friendsv2.R;
 
@@ -47,6 +50,24 @@ public class DetailActivity extends FragmentActivity {
         LocateItems();
         setGUI();
     }
+
+    private void processFile()
+    {
+        Log.d(TAG, "Before starting filechooser: ");
+        FileChooser fileChooser = new FileChooser(DetailActivity.this);
+        Log.d(TAG, "Before starting filechooser: " + fileChooser);
+        fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
+            @Override
+            public void fileSelected(File file) {
+                String filename = file.getAbsolutePath();
+                Log.i("File Name", filename);
+            }
+        });
+        // Set up and filter my extension I am looking for
+        //fileChooser.setExtension("pdf");
+        fileChooser.showDialog();
+    }
+
 
     private void LocateItems() {
         Log.d(TAG, "Locating items");
@@ -144,7 +165,7 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void camButton(View view) {
-        Log.e(TAG, "What happens?");
+        Log.e(TAG, "Cam button pressed");
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -234,12 +255,29 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void getLocation(View view) {
-        Log.d(TAG, "Detail activity will be started");
+        /*Log.d(TAG, "Detail activity will be started");
         f = (BEFriend) getIntent().getSerializableExtra("friend");
         Intent x = new Intent(this, MapActivity.class);
         addData(x, f);
         startActivity(x);
-        Log.d(TAG, "Detail activity is started");
+        Log.d(TAG, "Detail activity is started");*/
+
+        try{
+            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+                if ( ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_DOCUMENTS)
+                        == PackageManager.PERMISSION_DENIED ) {
+                    String[] permissions = {Manifest.permission.MANAGE_DOCUMENTS};
+                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                }
+
+                else {
+                    Toast.makeText(this, "Permission failed: " +  PackageManager.PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
+                }
+                processFile();
+            }
+        }catch(Exception e) {
+            Log.e(TAG, "FileChooser error: " + e);
+        }
     }
 
     private void addData(Intent x, BEFriend f)
@@ -249,6 +287,8 @@ public class DetailActivity extends FragmentActivity {
 
     public void goToCamera(View view) {
         Log.e(TAG, "What happens?");
+
+        /*
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -265,6 +305,6 @@ public class DetailActivity extends FragmentActivity {
             }
             //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
+        }*/
     }
 }
