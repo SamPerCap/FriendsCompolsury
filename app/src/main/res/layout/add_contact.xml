@@ -15,16 +15,23 @@
         android:layout_gravity="center"
         android:text="@string/NewContact" />
 
-    <ImageView
-        android:id="@+id/pictureView"
-        android:layout_width="match_parent"
-        android:onClick="goToCamera"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/pictureView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="goToCamera"
+                android:src="@drawable/lupa"
+                tools:srcCompat="@tools:sample/avatars" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"

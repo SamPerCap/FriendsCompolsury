@@ -43,8 +43,6 @@ public class AddContactActivity extends Activity {
         etSaveBirthday = findViewById(R.id.etBirthday);
     }
 
-
-
     private void saveContactInDatabase() {
         Log.d(TAG,"Saving a new contact into the database");
         //String m_name, String m_address, String m_phone, String m_email,
