@@ -42,7 +42,7 @@
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="300dp">
+        android:layout_height="441dp">
 
         <TableRow
             android:layout_width="match_parent"
@@ -56,24 +56,6 @@
                 android:hint="@string/Name"
                 android:inputType="textPersonName|text" />
 
-            <Button
-                android:id="@+id/btnSMS"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:onClick="smsButton"
-                android:text="@string/SMS" />
-
-            <Button
-                android:id="@+id/btnCALL"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_gravity="end"
-                android:layout_margin="1dp"
-                android:layout_weight="1"
-                android:onClick="callButton"
-                android:text="@string/Call" />
         </TableRow>
 
         <TableRow
@@ -86,7 +68,7 @@
             <EditText
                 android:id="@+id/etEmail"
                 android:hint="@string/Email"
-                android:inputType="number|phone" />
+                android:inputType="textWebEmailAddress|text|textEmailAddress" />
 
             <Button
                 android:id="@+id/btnEMAIL"
@@ -96,6 +78,39 @@
                 android:layout_weight="1"
                 android:onClick="mailButton"
                 android:text="@string/Email" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Phone" />
+
+            <EditText
+                android:id="@+id/etPhone"
+                android:hint="@string/Phone"
+                android:inputType="number|phone" />
+
+            <Button
+                android:id="@+id/btnCALL"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:onClick="callButton"
+                android:text="@string/Call" />
+
+            <Button
+                android:id="@+id/btnSMS"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:onClick="smsButton"
+                android:text="@string/SMS" />
+
         </TableRow>
 
         <TableRow
