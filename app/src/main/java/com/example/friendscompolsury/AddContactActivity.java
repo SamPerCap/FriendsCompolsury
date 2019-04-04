@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
 
@@ -38,6 +39,7 @@ public class AddContactActivity extends Activity {
     private ImageView _pictureView;
     private IDataCRUD _dataCRUD;
     Bitmap mImageBitmap;
+    String filePath;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,15 +69,26 @@ public class AddContactActivity extends Activity {
     }
 
     private void saveContactInDatabase() {
-        Log.d(TAG,"Saving a new contact into the database");
-        //String m_name, String m_address, String m_phone, String m_email,
-        //String m_webSite, String m_birthday, double m_location_x,
-        //double m_location_y, int m_img
-        _dataCRUD.addPerson(new BEFriend(etSaveName.getText().toString(),etSaveAddress.getText().toString(),
-                etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
-                etSaveBirthday.getText().toString(), 0,0, _pictureView.toString()));
-        Log.d(TAG,"New person added");
-        startActivity(new Intent(AddContactActivity.this, MainActivity.class));
+        if(!etSaveAddress.getText().equals(null)
+        && !etSaveName.getText().equals(null)
+        && !etSaveBirthday.getText().equals(null)
+        && !etSaveEmail.getText().equals(null)
+        && !etSavePhone.getText().equals(null)
+        && !etSaveURL.getText().equals(null)) {
+            Log.d(TAG, "Saving a new contact into the database");
+            //String m_name, String m_address, String m_phone, String m_email,
+            //String m_webSite, String m_birthday, double m_location_x,
+            //double m_location_y, int m_img
+            _dataCRUD.addPerson(new BEFriend(etSaveName.getText().toString(), etSaveAddress.getText().toString(),
+                    etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
+                    etSaveBirthday.getText().toString(), 0, 0, filePath));
+            Log.d(TAG, "New person added");
+            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
+    }
+        else
+        {
+            Toast.makeText(this, "Fill out every fields", Toast.LENGTH_SHORT).show();
+        }
     }
     public void goToCamera(View view) {
         Log.e(TAG, "What happens?");
@@ -121,6 +134,7 @@ public class AddContactActivity extends Activity {
                     .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
             Log.d(TAG, "Photo taken - size: " + f.length() );
             Log.d(TAG, "     Location: " + f.getAbsolutePath());
+            filePath = f.getAbsolutePath();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -141,7 +155,7 @@ public class AddContactActivity extends Activity {
             if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_DENIED) {
 
-                Log.d(TAG, "permission denied to CAMERA - requesting it");
+                Log.d(TAG, "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
                 String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
                 requestPermissions(permissions, PERMISSION_REQUEST_CODE);

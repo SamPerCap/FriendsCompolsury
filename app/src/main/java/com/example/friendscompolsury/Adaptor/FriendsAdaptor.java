@@ -1,6 +1,7 @@
 package com.example.friendscompolsury.Adaptor;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.example.friendscompolsury.IDataCRUD;
 import com.example.friendscompolsury.MainActivity;
 import com.example.friendscompolsury.Model.BEFriend;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import dk.easv.friendsv2.R;
@@ -42,11 +44,25 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
 
         TextView txtTitle = (TextView) rowView.findViewById(R.id.textView);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.image);
+        txtTitle.setText(friends.get(position).getM_name());
 
-        for (BEFriend person: friends){
-            txtTitle.setText(person.getM_name());
-            imageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
+        try
+        {Bitmap bit = BitmapFactory.decodeFile(friends.get(position).getM_img());
+        if(bit != null) {
+            imageView.setImageBitmap(bit);
         }
+        else
+        {
+            Log.d(TAG, "Bimap: is 0 ");
+            imageView.setImageResource(R.drawable.cake);
+        }
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "file can convertes: ");
+            imageView.setImageResource(R.drawable.cake);
+        }
+
         return rowView;
 
     };

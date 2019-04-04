@@ -18,6 +18,9 @@ public class BEFriend implements Serializable {
     private double m_location_y;
     private String m_img;
 
+    public BEFriend() {
+    }
+
     public BEFriend(long m_id, String m_name, String m_address, String m_phone, String m_email,
                     String m_webSite, String m_birthday, double m_location_x, double m_location_y,
                     String m_img) {
