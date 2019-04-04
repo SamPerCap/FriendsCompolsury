@@ -64,7 +64,14 @@ public class SQLiteImplementation implements IDataCRUD {
     @Override
     public void updatePerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Updating a person " + p.getM_id());
-
+        BEFriend friendToUpdate = getPersonById(p.m_id);
+        friendToUpdate.setM_name(p.getM_name());
+        friendToUpdate.setM_address(p.getM_address());
+        friendToUpdate.setM_birthday(p.getM_birthday());
+        friendToUpdate.setM_email(p.getM_email());
+        //friendToUpdate.setM_img(p.getM_img());
+        friendToUpdate.setM_phone(p.getM_phone());
+        friendToUpdate.setM_webSite(p.getM_webSite());
 
     }
 

@@ -20,17 +20,17 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import dk.easv.friendsv2.R;
 
@@ -42,10 +42,12 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
     DataAccessFactory _dataAccess;
+    IDataCRUD _dataCRUD;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
+    Button updateBtn;
 
     private Bitmap mImageBitmap;
 
@@ -55,12 +57,22 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "Detail Activity started");
         LocateItems();
-        /*MapFragment mapFragment =
-                (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
-        initMap();
         setGUI();
-        _dataAccess.getInstance();
+
+        _dataCRUD = _dataAccess.getInstance();
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateContact();
+            }
+        });
+    }
+
+    private void updateContact() {
+        BEFriend personToUpdate = new BEFriend(etName.getText().toString(), etAddress.getText().toString(),
+                etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
+                etBirthday.getText().toString(), 0, 0, mImageView.getBaseline());
+        _dataCRUD.updatePerson(personToUpdate);
     }
 
     private void LocateItems() {
@@ -72,33 +84,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         etURL = findViewById(R.id.etURL);
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
-    }
-
-    private void initMap() {
-        /*Log.d(TAG, "Initializating map");
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            //  m_map.setMyLocationEnabled(true);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
-
-        Log.d(TAG, "getting the map async");
-        ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                Log.d(TAG, "The map is ready - adding markers");
-                m_map = googleMap;
-
-                BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
-                final LatLng ROUND = new LatLng(f.getM_location_x(), f.getM_location_y());
-
-                friend_marker = new MarkerOptions().alpha((float) 0.3).position(ROUND).title(f.getM_name()
-                        + " lives here!");
-
-                m_map.addMarker(friend_marker);
-            }
-        });*/
+        updateBtn = findViewById(R.id.btnUPDATE);
     }
 
     private void setGUI() {
@@ -106,7 +92,6 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
             Log.d(TAG, "The database is empty");
         } else {
             for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
-                //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
                 Log.d(TAG, "setGUI: " + person.toString());
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
@@ -330,8 +315,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         Log.d(TAG, "Detail activity is started");
     }
 
-    private void addData(Intent x, BEFriend f)
-    {
+    private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
 
