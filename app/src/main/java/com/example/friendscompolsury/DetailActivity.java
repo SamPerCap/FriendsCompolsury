@@ -111,6 +111,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
                 etPhone.setText(person.getM_phone());
+                etAddress.setText(person.getM_address());
                 etBirthday.setText(person.getM_birthday());
                 etURL.setText(person.getM_webSite());
                 mImageView.setImageResource(person.getM_img());
