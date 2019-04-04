@@ -108,7 +108,7 @@
             <EditText
                 android:id="@+id/etSBirthday"
                 android:hint="@string/Birthday"
-                android:inputType="datetime|text" />
+                android:inputType="date|datetime" />
         </TableRow>
 
     </TableLayout>

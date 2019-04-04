@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -42,8 +41,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
-    IDataCRUD _dataCRUD = MainActivity.dataCRUD;
-    MarkerOptions friend_marker;
+    DataAccessFactory _dataAccess;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
@@ -56,13 +54,13 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "Detail Activity started");
-
         LocateItems();
         /*MapFragment mapFragment =
                 (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);*/
         initMap();
         setGUI();
+        _dataAccess.getInstance();
     }
 
     private void LocateItems() {
@@ -104,15 +102,17 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     }
 
     private void setGUI() {
-        if (_dataCRUD.getAllPersons().size() < 0) {
+        if (_dataAccess.getInstance().getAllPersons().size() < 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            for (BEFriend person : _dataCRUD.getAllPersons()) {
+            for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
                 //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
                 Log.d(TAG, "setGUI: " + person.toString());
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
                 etPhone.setText(person.getM_phone());
+                etBirthday.setText(person.getM_birthday());
+                etURL.setText(person.getM_webSite());
                 mImageView.setImageResource(person.getM_img());
             }
         }
