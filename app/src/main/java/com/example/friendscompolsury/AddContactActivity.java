@@ -69,7 +69,7 @@ public class AddContactActivity extends Activity {
         //double m_location_y, int m_img
         _dataCRUD.addPerson(new BEFriend(etSaveName.getText().toString(),etSaveAddress.getText().toString(),
                 etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
-                etSaveBirthday.getText().toString(), 0,0, _pictureView.getImageAlpha()));
+                etSaveBirthday.getText().toString(), 0,0, _pictureView.getId()));
         Log.d(TAG,"New person added");
         startActivity(new Intent(AddContactActivity.this, MainActivity.class));
     }
