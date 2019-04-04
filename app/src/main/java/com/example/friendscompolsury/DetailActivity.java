@@ -70,7 +70,7 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         etEmail = findViewById(R.id.etEmail);
         etAddress = findViewById(R.id.etAddress);
         etName = findViewById(R.id.etName);
-        etPhone = findViewById(R.id.etPhone);
+        etPhone = findViewById(R.id.etP);
         etURL = findViewById(R.id.etURL);
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
