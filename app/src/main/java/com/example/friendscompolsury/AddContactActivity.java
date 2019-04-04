@@ -2,10 +2,16 @@ package com.example.friendscompolsury;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -92,7 +98,29 @@ public class AddContactActivity extends Activity {
     }
     public void goToCamera(View view) {
         Log.e(TAG, "What happens?");
+        final String[] options = {"Select image", "Take new image"};
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a color");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(options[which].equals(options[0]))
+                {
+                    performFileSearch();
+                }
+                if(options[which].equals(options[1]))
+                {
+                    takePicture();
+                }
+            }
+        });
+        builder.show();
+
+
+    }
+    public void takePicture()
+    {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -123,8 +151,22 @@ public class AddContactActivity extends Activity {
             _pictureView.setImageBitmap(mImageBitmap);
             saveFileInLocalFolder();
         }
-    }
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
 
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                filePath = mf_szGetRealPathFromURI(this,uri);
+                _pictureView.setImageBitmap(BitmapFactory.decodeFile(filePath));
+                Log.i(TAG, "Uri: " + filePath);
+                // showImage(uri);
+            }
+        }
+    }
     private void saveFileInLocalFolder() {
         FileOutputStream outputPhoto = null;
         try {
@@ -191,4 +233,38 @@ public class AddContactActivity extends Activity {
         Log.d(TAG, "Permission for writing NOT granted");
         return null;
     }
+    private static final int READ_REQUEST_CODE = 42;
+    /**
+     * Fires an intent to spin up the "file chooser" UI and select an image.
+     */
+    public void performFileSearch() {
+
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        startActivityForResult(i, 42);
+    }
+    public String mf_szGetRealPathFromURI(final Context context, final Uri ac_Uri )
+    {
+        String result = "";
+        boolean isok = false;
+
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(ac_Uri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            result = cursor.getString(column_index);
+            isok = true;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return isok ? result : "";
+    }
+
 }

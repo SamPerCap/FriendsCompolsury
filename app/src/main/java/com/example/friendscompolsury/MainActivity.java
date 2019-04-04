@@ -38,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
         _dataAccess.init(MainActivity.this);
         _dataCRUD = _dataAccess.getInstance();
         _dataCRUD.getAllPersons().clear();
-        _dataCRUD.addPerson(new BEFriend("jacob", "Street",
-                "000000", "example@gmail.com", "www.example.com",
-                "18-00-2001", 0, 0, "/storage/emulated/0/DCIM/Camera/hej.jpg"));
         for (BEFriend person : _dataCRUD.getAllPersons()){
         friendsList.add(person);
         }
