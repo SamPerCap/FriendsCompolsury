@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +26,10 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG = "Friend2";
     ListView list;
     Friends m_friends;
+    FloatingActionButton addContactButton;
     Context context = this;
     ArrayList<BEFriend> friends;
-    IDataCRUD dataCRUD;
+    public static IDataCRUD dataCRUD;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +38,14 @@ public class MainActivity extends AppCompatActivity {
         m_friends = new Friends();
 
         dataCRUD = new SQLiteImplementation(this);
-        FreindsAdaptor adapter=new FreindsAdaptor(this,(ArrayList<BEFriend>) dataCRUD.getAllPersons(),m_friends.getNames() );
+        dataCRUD.getAllPersons().clear();
+        dataCRUD.addPerson(new BEFriend("Example", "Street",
+                "000000", "example@gmail.com", "www.example.com",
+                "18-00-2001", 0, 0, 0));
 
-        list=(ListView)findViewById(R.id.listview);
+        m_friends.setArraylistFried((ArrayList) dataCRUD.getAllPersons());
+        FreindsAdaptor adapter = new FreindsAdaptor(this, (ArrayList) dataCRUD.getAllPersons(), m_friends.getNames());
+        list = (ListView) findViewById(R.id.listview);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -47,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-               //BEFriend Slecteditem= m_f;
-                Intent x = new Intent(context,DetailActivity.class);
+                //BEFriend Slecteditem= m_f;
+                Intent x = new Intent(context, DetailActivity.class);
                 Log.d(TAG, "Detail activity will be started");
                 BEFriend friend = m_friends.getAll().get(position);
                 addData(x, friend);
@@ -56,9 +63,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Detail activity is started");
             }
         });
-
-        dataCRUD.addPerson(m_friends.getAll().get(0));
-}
+        addContactButton = (FloatingActionButton) findViewById(R.id.addNewContact);
+        addContactButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, AddContactActivity.class));
+            }
+        });
+    }
 
 
    /* @Override
@@ -74,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     }*/
 
-    private void addData(Intent x, BEFriend f)
-    {
+    private void addData(Intent x, BEFriend f) {
         Log.d(TAG, "addData: " + f.toString());
         x.putExtra("friend", f);
     }
@@ -94,5 +105,4 @@ public class MainActivity extends AppCompatActivity {
         list.setAdapter(adapter);
 
     }
-
 }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.friendscompolsury.DetailActivity">
+
+    <TextView
+        android:id="@+id/tvHeader"
+        style="@style/Base.TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/NewContact" />
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/pictureView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:onClick="goToCamera"
+                android:src="@drawable/lupa"
+                tools:srcCompat="@tools:sample/avatars" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Name" />
+
+            <EditText
+                android:id="@+id/etSName"
+                android:hint="@string/Name"
+                android:inputType="textPersonName|text" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Phone" />
+
+            <EditText
+                android:id="@+id/etSPhone"
+                android:hint="@string/Phone"
+                android:inputType="number|phone" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Address" />
+
+            <EditText
+                android:id="@+id/etSAddress"
+                android:hint="@string/Address"
+                android:inputType="text|textPostalAddress" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Email" />
+
+            <EditText
+                android:id="@+id/etSEmail"
+                android:hint="@string/Email"
+                android:inputType="textEmailAddress" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/URL" />
+
+            <EditText
+                android:id="@+id/etSURL"
+                android:hint="@string/URL"
+                android:inputType="textWebEditText|text" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dip">
+
+            <TextView android:text="@string/Birthday" />
+
+            <EditText
+                android:id="@+id/etSBirthday"
+                android:hint="@string/Birthday"
+                android:inputType="datetime|text" />
+        </TableRow>
+
+    </TableLayout>
+
+    <Button
+        android:id="@+id/SaveContactButton"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/SaveContact"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
