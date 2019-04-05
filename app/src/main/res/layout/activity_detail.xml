@@ -42,7 +42,7 @@
 
     <TableLayout
         android:layout_width="fill_parent"
-        android:layout_height="441dp">
+        android:layout_height="wrap_content">
 
         <TableRow
             android:layout_width="match_parent"
@@ -166,12 +166,15 @@
             android:id="@+id/btnLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
             android:onClick="getLocation"
-
             android:text="@string/Home" />
 
+        <Button
+            android:id="@+id/btnUPDATE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="updateContact"
+            android:text="@string/Update" />
     </LinearLayout>
 
 

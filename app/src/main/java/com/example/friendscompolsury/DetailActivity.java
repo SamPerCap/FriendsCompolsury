@@ -16,12 +16,12 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import dk.easv.friendsv2.R;
 
@@ -35,8 +35,10 @@ public class DetailActivity extends FragmentActivity {
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
-
+    Button updateBtn;
+    long _contactID;
     private Bitmap mImageBitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,16 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-        _dataAccess.getInstance();
+        _dataAccess = new DataAccessFactory();
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
+                        etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
+                        etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
+                finish();
+            }
+        });
     }
 
     private void LocateItems() {
@@ -57,6 +68,7 @@ public class DetailActivity extends FragmentActivity {
         etURL = findViewById(R.id.etURL);
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
+        updateBtn = findViewById(R.id.btnUPDATE);
     }
 
     private void setGUI() {
@@ -64,7 +76,6 @@ public class DetailActivity extends FragmentActivity {
             Log.d(TAG, "The database is empty");
         } else {
             for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
-                //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
                 Log.d(TAG, "setGUI: " + person.toString());
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
@@ -252,8 +263,7 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail activity is started");
     }
 
-    private void addData(Intent x, BEFriend f)
-    {
+    private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
 

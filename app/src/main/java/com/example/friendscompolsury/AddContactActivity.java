@@ -17,8 +17,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,9 +41,8 @@ public class AddContactActivity extends Activity {
     private String TAG = MainActivity.TAG;
     private EditText etSaveName, etSaveEmail, etSaveAddress, etSavePhone, etSaveBirthday, etSaveURL;
     private Button saveContactButton;
-    private DataAccessFactory _dataAccess;
+    private DataAccessFactory _dataAccess = MainActivity._dataAccess;
     private ImageView _pictureView;
-    private IDataCRUD _dataCRUD;
     Bitmap mImageBitmap;
     String filePath;
 
@@ -57,13 +56,11 @@ public class AddContactActivity extends Activity {
             @Override
             public void onClick(View view) {
                 saveContactInDatabase();
-                setContentView(R.layout.activity_detail);
             }
         });
-        _dataCRUD = _dataAccess.getInstance();
     }
 
-    private void locateItems(){
+    private void locateItems() {
         saveContactButton = findViewById(R.id.SaveContactButton);
         etSaveName = findViewById(R.id.etSName);
         etSaveEmail = findViewById(R.id.etSEmail);
@@ -85,7 +82,7 @@ public class AddContactActivity extends Activity {
             //String m_name, String m_address, String m_phone, String m_email,
             //String m_webSite, String m_birthday, double m_location_x,
             //double m_location_y, int m_img
-            _dataCRUD.addPerson(new BEFriend(etSaveName.getText().toString(), etSaveAddress.getText().toString(),
+            _dataAccess.addContact(new BEFriend(etSaveName.getText().toString(), etSaveAddress.getText().toString(),
                     etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
                     etSaveBirthday.getText().toString(), 0, 0, filePath));
             Log.d(TAG, "New person added");
