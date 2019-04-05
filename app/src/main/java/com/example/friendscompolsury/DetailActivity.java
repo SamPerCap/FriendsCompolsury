@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,14 +43,14 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
     DataAccessFactory _dataAccess;
-    IDataCRUD _dataCRUD;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
     Button updateBtn;
-
+    long _contactID;
     private Bitmap mImageBitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +59,16 @@ public class DetailActivity extends FragmentActivity implements GoogleMap.OnMyLo
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-
-        _dataCRUD = _dataAccess.getInstance();
+        _dataAccess = new DataAccessFactory();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateContact();
+                _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
+                        etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
+                        etBirthday.getText().toString(), 0, 0, mImageView.getBaseline()));
+                finish();
             }
         });
-    }
-
-    private void updateContact() {
-        BEFriend personToUpdate = new BEFriend(etName.getText().toString(), etAddress.getText().toString(),
-                etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
-                etBirthday.getText().toString(), 0, 0, mImageView.getBaseline());
-        _dataCRUD.updatePerson(personToUpdate);
     }
 
     private void LocateItems() {

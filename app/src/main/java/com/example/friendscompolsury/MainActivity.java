@@ -3,8 +3,8 @@ package com.example.friendscompolsury;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,38 +27,32 @@ public class MainActivity extends AppCompatActivity {
     ListView list;
     FloatingActionButton addContactButton;
     Context context = this;
-    BEFriend _friends;
-    ArrayList<BEFriend> friendsList = new ArrayList<>();
-    DataAccessFactory _dataAccess;
-    IDataCRUD _dataCRUD;
+    public static DataAccessFactory _dataAccess;
+    FriendsAdaptor adapter;
+    Intent adapterIntent;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
+        _dataAccess = new DataAccessFactory();
         _dataAccess.init(MainActivity.this);
-        _dataCRUD = _dataAccess.getInstance();
-        _dataCRUD.getAllPersons().clear();
-        _dataCRUD.addPerson(new BEFriend("Example", "Street",
+        /*_dataAccess.addContact(new BEFriend("Example", "Street",
                 "000000", "example@gmail.com", "www.example.com",
-                "18-00-2001", 0, 0, R.drawable.lupa));
-        for (BEFriend person : _dataCRUD.getAllPersons()){
-        friendsList.add(person);
-        }
-        FriendsAdaptor adapter = new FriendsAdaptor(this, friendsList);
+                "18-00-2001", 0, 0, R.drawable.lupa));*/
+
         list = (ListView) findViewById(R.id.listview);
-        list.setAdapter(adapter);
+        SettingAdapter();
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
-                Intent intent = new Intent(context, DetailActivity.class);
+                adapterIntent = new Intent(context, DetailActivity.class);
                 Log.d(TAG, "Detail activity will be started");
-                //_dataCRUD.getAll().get(position);
-                addData(intent, _friends);
-                startActivity(intent);
+                addData(adapterIntent, _dataAccess.getFriendsList().get(position));
+                startActivity(adapterIntent);
                 Log.d(TAG, "Detail activity is started");
             }
         });
@@ -67,27 +61,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AddContactActivity.class));
+
             }
         });
     }
 
-
-   /* @Override
-    public void onListItemClick(ListView parent, View v, int position,
-                                long id) {
-
-        Intent x = new Intent(this, DetailActivity.class);
-        Log.d(TAG, "Detail activity will be started");
-        BEFriend friend = m_friends.getAll().get(position);
-        addData(x, friend);
-        startActivity(x);
-        Log.d(TAG, "Detail activity is started");
-
-    }*/
+    private void SettingAdapter() {
+        adapter = new FriendsAdaptor(this);
+        list.setAdapter(adapter);
+    }
 
     private void addData(Intent x, BEFriend f) {
         Log.d(TAG, "adding Data to details");
-        x.putExtra("friend", f);
+        x.putExtra("friend", f.getM_id() + 1);
     }
 
     @Override
@@ -97,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeSort(MenuItem item) {
-        Log.d(TAG, "sort changing to "+item.getTitle());
-        ArrayList<BEFriend> asd =(ArrayList<BEFriend>) _dataCRUD.getAllPersons();
-        Collections.sort(asd, new CompareSort());
-        //FriendsAdaptor adapter=new FriendsAdaptor(this, asd, friendsList);
-        //list.setAdapter(adapter);
+        Log.d(TAG, "sort changing to " + item.getTitle());
+        ArrayList<BEFriend> newArray = _dataAccess.getFriendsList();
+        Collections.sort(newArray, new CompareSort());
+        FriendsAdaptor adapter=new FriendsAdaptor(this);
+        list.setAdapter(adapter);
 
     }
 }

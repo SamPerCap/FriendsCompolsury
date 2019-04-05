@@ -1,5 +1,6 @@
 package com.example.friendscompolsury;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,20 +34,20 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
-    public long addPerson(BEFriend p) {
+    public void addPerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Adding a new person.");
-        this.insertStmt.bindString(1, p.getM_name());
-        this.insertStmt.bindString(2, p.getM_address());
-        this.insertStmt.bindString(3, p.getM_phone());
-        this.insertStmt.bindString(4, p.getM_email());
-        this.insertStmt.bindString(5, p.getM_webSite());
-        this.insertStmt.bindString(6, p.getM_birthday());
-        this.insertStmt.bindDouble(7, p.getM_location_x());
-        this.insertStmt.bindDouble(8, p.getM_location_y());
-        this.insertStmt.bindDouble(9, p.getM_img());
-        long id = this.insertStmt.executeInsert();
-        p.setM_id(id);
-        return id;
+        ContentValues values = new ContentValues();
+        values.put("name", p.getM_name());
+        values.put("address", p.getM_address());
+        values.put("number", p.getM_phone());
+        values.put("email",p.getM_email());
+        values.put("website", p.getM_webSite());
+        values.put("birthday",p.getM_birthday());
+        values.put("location_x",p.getM_location_x());
+        values.put("location_y",p.getM_location_y());
+        values.put("picture",p.getM_img());
+        this.db.insert(TABLE_NAME,null,values);
+        Log.d(TAG,"Adding a new person finished");
     }
 
     @Override
@@ -64,14 +65,19 @@ public class SQLiteImplementation implements IDataCRUD {
     @Override
     public void updatePerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Updating a person " + p.getM_id());
-        BEFriend friendToUpdate = getPersonById(p.m_id);
-        friendToUpdate.setM_name(p.getM_name());
-        friendToUpdate.setM_address(p.getM_address());
-        friendToUpdate.setM_birthday(p.getM_birthday());
-        friendToUpdate.setM_email(p.getM_email());
-        //friendToUpdate.setM_img(p.getM_img());
-        friendToUpdate.setM_phone(p.getM_phone());
-        friendToUpdate.setM_webSite(p.getM_webSite());
+        ContentValues values = new ContentValues();
+        //name, address, number, email, website, birthday ,location_x, location_y, picture
+        values.put("name", p.getM_name());
+        values.put("address", p.getM_address());
+        values.put("number", p.getM_phone());
+        values.put("email",p.getM_email());
+        values.put("website", p.getM_webSite());
+        values.put("birthday",p.getM_birthday());
+        values.put("location_x",p.getM_location_x());
+        values.put("location_y",p.getM_location_y());
+        values.put("picture",p.getM_img());
+        this.db.update(TABLE_NAME, values, "id="+p.getM_id(), null);
+        Log.d(TAG,"Update done");
 
     }
 
