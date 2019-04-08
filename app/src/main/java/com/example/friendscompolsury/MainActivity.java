@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,19 +34,21 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     FriendsAdaptor adapter;
     Intent adapterIntent;
+    int index;
+    Object selectedObject;
+    AdapterView.AdapterContextMenuInfo menuInfo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list);
+        list = (ListView) findViewById(R.id.listview);
         _dataAccess = new DataAccessFactory();
         _dataAccess.init(MainActivity.this);
         context = this;
-        readPremision();
-
-        list = (ListView) findViewById(R.id.listview);
+        readPermision();
         SettingAdapter();
-
+        registerForContextMenu(list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -66,14 +70,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void readPremision() {
+    private void readPermision() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_DENIED) {
 
-                Log.d(TAG, "permission denied to CAMERA - requesting it");
+                Log.d(TAG, "permission denied to READ_EXTERNAL_STORAGE - requesting it");
                 String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
 
                 requestPermissions(permissions, PERMISSION_REQUEST_CODE);
@@ -97,12 +99,38 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
     public void changeSort(MenuItem item) {
         Log.d(TAG, "sort changing to " + item.getTitle());
         ArrayList<BEFriend> newArray = _dataAccess.getFriendsList();
         Collections.sort(newArray, new CompareSort());
         FriendsAdaptor adapter = new FriendsAdaptor(this, newArray);
         list.setAdapter(adapter);
+    }
 
+    public void deleteEverything(MenuItem item) {
+        Log.d(TAG, "Removing all contacts");
+        _dataAccess.deleteEverything();
+        _dataAccess.clearArrayList();
+        adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
+        list.setAdapter(adapter);
+        Log.d(TAG, "Database and Arraylist have been removed");
+    }
+
+
+    public void deleteContact(MenuItem item) {
+        index = list.getSelectedItemPosition();
+        selectedObject = list.getSelectedItem();
+        menuInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        index = menuInfo.position;
+        _dataAccess.removeByID(index+1);
+        adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
+        list.setAdapter(adapter);
     }
 }

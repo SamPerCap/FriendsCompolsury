@@ -63,6 +63,9 @@ public class DataAccessFactory {
         Log.d(TAG, "New person added");
         getFriendsList();
     }
+    protected void removeByID(long ID){
+        mInstance.deleteById(ID);
+    }
 
 
 }
