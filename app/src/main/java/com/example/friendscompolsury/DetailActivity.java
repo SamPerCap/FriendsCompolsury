@@ -71,7 +71,7 @@ public class DetailActivity extends FragmentActivity {
         try {
             startActivityForResult(
                     Intent.createChooser(intent, "Select a File to Upload"),
-                    FILE_SELECT_CODE);
+                    READ_REQUEST_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(this, "Please install a File Manager.",
