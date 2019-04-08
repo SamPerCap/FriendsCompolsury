@@ -64,19 +64,11 @@ public class DetailActivity extends FragmentActivity {
     }
 
     private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    READ_REQUEST_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(this, "Please install a File Manager.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        startActivityForResult(i, 42);
     }
 
 
@@ -220,19 +212,20 @@ public class DetailActivity extends FragmentActivity {
             Uri uri = data.getData();
             Log.d(TAG, "File Uri: " + uri.toString());
             // Get the path
-            String  path = null;
-            try {
-                path = FileChooser.getPath(this, uri);
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-                Log.e(TAG,"path: " + e);
-            }
-            //String path = mf_szGetRealPathFromURI(this, uri);
+            //String  path = null;
+            String path = FileChooser.mf_szGetRealPathFromURI(this, uri);
+                /*try {
+                    path = FileUtils.getPath(this, uri);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    Log.e(TAG,"path: " + e);
+                }*/
+
             Log.d(TAG, "File Path: " + path);
             // Get the file instance
-            File file = new File(path);
+            //File file = new File(path);
             // Initiate the upload
-            Log.d(TAG, "Get the file path: " + path + file);
+            Log.d(TAG, "Get the file path: " + path );
 
             mImageView.setImageBitmap(BitmapFactory.decodeFile(path));
             Log.i(TAG, "Uri: " + path);
@@ -326,10 +319,8 @@ public class DetailActivity extends FragmentActivity {
         x.putExtra("friend", f);
     }
 
-    public void goToCamera(View view) {
-        Log.e(TAG, "What happens?");
-
-        /*
+    private void takePicture()
+    {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -346,6 +337,28 @@ public class DetailActivity extends FragmentActivity {
             }
             //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }*/
+        }
+    }
+
+    public void goToCamera(View view) {
+        Log.e(TAG, "What happens?");
+        final String[] options = {"Select image", "Take new image"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a color");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(options[which].equals(options[0]))
+                {
+                    showFileChooser();
+                }
+                if(options[which].equals(options[1]))
+                {
+                    takePicture();
+                }
+            }
+        });
+        builder.show();
     }
 }
