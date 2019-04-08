@@ -31,13 +31,13 @@ public class DetailActivity extends FragmentActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
-    DataAccessFactory _dataAccess;
+    DataAccessFactory _dataAccess = MainActivity._dataAccess;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
     Button updateBtn;
-    long _contactID;
+
     private Bitmap mImageBitmap;
 
 
@@ -48,11 +48,10 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-        _dataAccess = new DataAccessFactory();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
+                _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend",0), etName.getText().toString(), etAddress.getText().toString(),
                         etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
                         etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
                 startActivity(new Intent(DetailActivity.this, MainActivity.class));
@@ -73,11 +72,12 @@ public class DetailActivity extends FragmentActivity {
     }
 
     private void setGUI() {
-        if (_dataAccess.getInstance().getAllPersons().size() < 0) {
+        if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
+            BEFriend person = _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
                 Log.d(TAG, "setGUI: " + person.toString());
+
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
                 etPhone.setText(person.getM_phone());
@@ -92,7 +92,7 @@ public class DetailActivity extends FragmentActivity {
                 }
             }
         }
-    }
+
 
     private void sendSMS() {
         Log.d(TAG, "sendSMS method invoked");

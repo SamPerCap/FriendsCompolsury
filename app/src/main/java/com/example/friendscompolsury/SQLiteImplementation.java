@@ -76,7 +76,7 @@ public class SQLiteImplementation implements IDataCRUD {
         values.put("location_x",p.getM_location_x());
         values.put("location_y",p.getM_location_y());
         values.put("picture",p.getM_img());
-        this.db.update(TABLE_NAME, values, "id="+p.getM_id(), null);
+        this.db.update(TABLE_NAME, values, "id"+p.getM_id()+1, null);
         Log.d(TAG,"Update done");
 
     }

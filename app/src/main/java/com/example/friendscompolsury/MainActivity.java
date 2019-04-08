@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addData(Intent x, BEFriend f) {
         Log.d(TAG, "adding Data to details");
-        x.putExtra("friend", f.getM_id() + 1);
+        x.putExtra("friend", f.getM_id());
     }
 
     @Override

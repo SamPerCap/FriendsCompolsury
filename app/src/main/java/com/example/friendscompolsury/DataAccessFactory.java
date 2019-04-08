@@ -34,6 +34,10 @@ public class DataAccessFactory {
         }
         return friendsList;
     }
+
+    protected BEFriend getFriendByID(long ID){
+        return mInstance.getPersonById(ID);
+    }
     protected void deleteEverything(){
         mInstance.deleteAll();
         clearArrayList();
