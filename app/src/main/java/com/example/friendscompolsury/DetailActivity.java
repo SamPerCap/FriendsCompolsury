@@ -22,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
+
 import java.io.File;
+import java.net.URISyntaxException;
 
 import dk.easv.friendsv2.R;
 
@@ -39,7 +41,8 @@ public class DetailActivity extends FragmentActivity {
     Button updateBtn;
     long _contactID;
     private Bitmap mImageBitmap;
-
+    private static final int FILE_SELECT_CODE = 0;
+    private static final int READ_REQUEST_CODE = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +63,20 @@ public class DetailActivity extends FragmentActivity {
         });
     }
 
-    private void processFile()
-    {
-        Log.d(TAG, "Before starting filechooser: ");
-        FileChooser fileChooser = new FileChooser(DetailActivity.this);
-        Log.d(TAG, "Before starting filechooser: " + fileChooser);
-        fileChooser.setFileListener(new FileChooser.FileSelectedListener() {
-            @Override
-            public void fileSelected(File file) {
-                String filename = file.getAbsolutePath();
-                Log.i("File Name", filename);
-            }
-        });
-        // Set up and filter my extension I am looking for
-        //fileChooser.setExtension("pdf");
-        fileChooser.showDialog();
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(this, "Please install a File Manager.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -213,6 +215,28 @@ public class DetailActivity extends FragmentActivity {
             mImageBitmap = (Bitmap) b.get("data");
             mImageView.setImageBitmap(mImageBitmap);
         }
+        if (requestCode == READ_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Get the Uri of the selected file
+            Uri uri = data.getData();
+            Log.d(TAG, "File Uri: " + uri.toString());
+            // Get the path
+            String  path = null;
+            try {
+                path = FileChooser.getPath(this, uri);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                Log.e(TAG,"path: " + e);
+            }
+            //String path = mf_szGetRealPathFromURI(this, uri);
+            Log.d(TAG, "File Path: " + path);
+            // Get the file instance
+            File file = new File(path);
+            // Initiate the upload
+            Log.d(TAG, "Get the file path: " + path + file);
+
+            mImageView.setImageBitmap(BitmapFactory.decodeFile(path));
+            Log.i(TAG, "Uri: " + path);
+        }
     }
 
     public void callButton(View view) {
@@ -292,7 +316,6 @@ public class DetailActivity extends FragmentActivity {
                 else {
                     Toast.makeText(this, "Permission failed: " +  PackageManager.PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
                 }
-                processFile();
             }
         }catch(Exception e) {
             Log.e(TAG, "FileChooser error: " + e);
