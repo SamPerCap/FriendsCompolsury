@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public static String TAG = "Friend2";
     ListView list;
     FloatingActionButton addContactButton;
-    Context context = this;
+    Context context;
     public static DataAccessFactory _dataAccess;
     FriendsAdaptor adapter;
     Intent adapterIntent;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.simple_list);
         _dataAccess = new DataAccessFactory();
         _dataAccess.init(MainActivity.this);
+        context = this;
         list = (ListView) findViewById(R.id.listview);
         SettingAdapter();
 
@@ -57,13 +58,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, AddContactActivity.class));
-
             }
         });
     }
 
     private void SettingAdapter() {
-        adapter = new FriendsAdaptor(this);
+        adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
         list.setAdapter(adapter);
     }
 
@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "sort changing to " + item.getTitle());
         ArrayList<BEFriend> newArray = _dataAccess.getFriendsList();
         Collections.sort(newArray, new CompareSort());
-        FriendsAdaptor adapter=new FriendsAdaptor(this);
-        list.setAdapter(adapter);
+        //FriendsAdaptor adapter=new FriendsAdaptor(this);
+       // list.setAdapter(adapter);
 
     }
 }

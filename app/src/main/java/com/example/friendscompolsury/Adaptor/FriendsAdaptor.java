@@ -25,12 +25,14 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
     private final Activity context;
     private String TAG = MainActivity.TAG;
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
+    ArrayList<BEFriend> _arrayData;
 
-    public FriendsAdaptor(Activity context) {
+    public FriendsAdaptor(Activity context, ArrayList<BEFriend> arrayData) {
         super(context, R.layout.simple_list_item_with_image);
         // TODO Auto-generated constructor stub
         Log.d(TAG, "FriendsAdaptor invoked");
         this.context = context;
+        this._arrayData = arrayData;
     }
 
     public View getView(int position, View view, ViewGroup parent) {

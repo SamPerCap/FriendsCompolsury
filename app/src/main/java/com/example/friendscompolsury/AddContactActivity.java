@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 
 import java.io.File;
@@ -86,7 +87,7 @@ public class AddContactActivity extends Activity {
                     etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
                     etSaveBirthday.getText().toString(), 0, 0, filePath));
             Log.d(TAG, "New person added");
-            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
+            finish();
     }
         else
         {

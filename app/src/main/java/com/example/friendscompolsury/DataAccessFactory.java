@@ -3,6 +3,7 @@ package com.example.friendscompolsury;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ public class DataAccessFactory {
             friendsList.add(person);
             Log.d(TAG, person.getM_name()+" "+ person.getM_address());
         }
-
         return friendsList;
     }
 
