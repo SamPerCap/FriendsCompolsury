@@ -26,10 +26,10 @@ import dk.easv.friendsv2.R;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static String TAG = "Friend2";
+    public static DataAccessFactory _dataAccess;
     ListView list;
     FloatingActionButton addContactButton;
     Context context;
-    public static DataAccessFactory _dataAccess;
     FriendsAdaptor adapter;
     Intent adapterIntent;
 
@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void readPremision()
-    {
+
+    private void readPremision() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
 
@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "sort changing to " + item.getTitle());
         ArrayList<BEFriend> newArray = _dataAccess.getFriendsList();
         Collections.sort(newArray, new CompareSort());
-        //FriendsAdaptor adapter=new FriendsAdaptor(this);
-       // list.setAdapter(adapter);
+        FriendsAdaptor adapter = new FriendsAdaptor(this, newArray);
+        list.setAdapter(adapter);
 
     }
 }
