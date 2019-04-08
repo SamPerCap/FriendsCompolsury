@@ -27,7 +27,8 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
     ArrayList<BEFriend> _arrayData;
 
-    public FriendsAdaptor(Activity context, ArrayList<BEFriend> arrayData) {
+    public FriendsAdaptor(Activity context, ArrayList<BEFriend> arrayData)
+    {
         super(context, R.layout.simple_list_item_with_image);
         // TODO Auto-generated constructor stub
         Log.d(TAG, "FriendsAdaptor invoked");
@@ -35,7 +36,8 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
         this._arrayData = arrayData;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent)
+    {
         Log.d(TAG, "Getting the view from Friends Adapter ");
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.simple_list_item_with_image, null, true);
