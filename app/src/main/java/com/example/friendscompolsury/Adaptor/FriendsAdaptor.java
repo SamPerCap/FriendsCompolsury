@@ -27,9 +27,8 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
     ArrayList<BEFriend> _arrayData;
 
-    public FriendsAdaptor(Activity context, ArrayList<BEFriend> arrayData)
-    {
-        super(context, R.layout.simple_list_item_with_image);
+    public FriendsAdaptor(Activity context, ArrayList<BEFriend> arrayData) {
+        super(context, R.layout.simple_list_item_with_image,arrayData );
         // TODO Auto-generated constructor stub
         Log.d(TAG, "FriendsAdaptor invoked");
         this.context = context;

@@ -27,6 +27,7 @@ public class DataAccessFactory {
     }
 
     public ArrayList<BEFriend> getFriendsList() {
+        friendsList.clear();
         /*if (friendsList.isEmpty()){
             mInstance.addPerson(new BEFriend("Example", "Street",
                     "000000", "example@gmail.com", "www.example.com",

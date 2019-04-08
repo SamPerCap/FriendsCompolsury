@@ -87,7 +87,7 @@ public class AddContactActivity extends Activity {
                     etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
                     etSaveBirthday.getText().toString(), 0, 0, filePath));
             Log.d(TAG, "New person added");
-            finish();
+            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
     }
         else
         {
