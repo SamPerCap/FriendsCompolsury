@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
 
@@ -54,7 +55,7 @@ public class DetailActivity extends FragmentActivity {
                 _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
                         etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
                         etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
-                finish();
+                startActivity(new Intent(DetailActivity.this, MainActivity.class));
             }
         });
     }
@@ -85,11 +86,9 @@ public class DetailActivity extends FragmentActivity {
                 etURL.setText(person.getM_webSite());
                 try {
                     mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Log.d(TAG, "Can't parse this to image: " + person.getM_img());
-                    Log.d(TAG, ""+ex);
+                    Log.d(TAG, "" + ex);
                 }
             }
         }

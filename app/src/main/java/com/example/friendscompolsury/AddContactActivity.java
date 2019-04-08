@@ -87,12 +87,12 @@ public class AddContactActivity extends Activity {
                     etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
                     etSaveBirthday.getText().toString(), 0, 0, filePath));
             Log.d(TAG, "New person added");
-            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
-    }
+        }
         else
         {
             Toast.makeText(this, "Fill out every fields", Toast.LENGTH_SHORT).show();
         }
+        startActivity(new Intent(AddContactActivity.this, MainActivity.class));
     }
     public void goToCamera(View view) {
         Log.e(TAG, "What happens?");

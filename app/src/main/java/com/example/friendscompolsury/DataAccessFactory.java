@@ -27,17 +27,16 @@ public class DataAccessFactory {
     }
 
     public ArrayList<BEFriend> getFriendsList() {
-        friendsList.clear();
-        /*if (friendsList.isEmpty()){
-            mInstance.addPerson(new BEFriend("Example", "Street",
-                    "000000", "example@gmail.com", "www.example.com",
-                    "18-00-2001", 0, 0, R.drawable.lupa));
-        }*/
+        clearArrayList();
         for (BEFriend person : mInstance.getAllPersons()) {
             friendsList.add(person);
             Log.d(TAG, person.getM_name()+" "+ person.getM_address());
         }
         return friendsList;
+    }
+    protected void deleteEverything(){
+        mInstance.deleteAll();
+        clearArrayList();
     }
 
     public void setFriendsList(ArrayList<BEFriend> friendsList) {
@@ -45,7 +44,6 @@ public class DataAccessFactory {
     }
 
     protected void clearArrayList() {
-        if (!friendsList.isEmpty())
         friendsList.clear();
     }
 
