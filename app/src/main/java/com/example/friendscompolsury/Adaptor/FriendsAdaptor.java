@@ -35,7 +35,8 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
         this._arrayData = arrayData;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent)
+    {
         Log.d(TAG, "Getting the view from Friends Adapter ");
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.simple_list_item_with_image, null, true);

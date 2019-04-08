@@ -150,6 +150,7 @@ public class AddContactActivity extends Activity {
             saveFileInLocalFolder();
         }
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Request: " + RESULT_OK);
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
