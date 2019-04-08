@@ -16,11 +16,14 @@ public class BEFriend implements Serializable {
     private String m_birthday;
     private double m_location_x;
     private double m_location_y;
-    private int m_img;
+    private String m_img;
+
+    public BEFriend() {
+    }
 
     public BEFriend(long m_id, String m_name, String m_address, String m_phone, String m_email,
                     String m_webSite, String m_birthday, double m_location_x, double m_location_y,
-                    int m_img) {
+                    String m_img) {
         this.m_id = m_id;
         this.m_name = m_name;
         this.m_address = m_address;
@@ -35,7 +38,7 @@ public class BEFriend implements Serializable {
 
     public BEFriend(String m_name, String m_address, String m_phone, String m_email,
                     String m_webSite, String m_birthday, double m_location_x,
-                    double m_location_y, int m_img) {
+                    double m_location_y, String m_img) {
 
         this.m_name = m_name;
         this.m_address = m_address;
@@ -116,11 +119,11 @@ public class BEFriend implements Serializable {
         this.m_location_y = m_location_y;
     }
 
-    public int getM_img() {
+    public String getM_img() {
         return m_img;
     }
 
-    public void setM_img(int m_img) {
+    public void setM_img(String m_img) {
         this.m_img = m_img;
     }
 

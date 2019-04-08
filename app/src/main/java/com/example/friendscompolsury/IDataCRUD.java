@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IDataCRUD {
 
-    long addPerson(BEFriend p);
+    void addPerson(BEFriend p);
     void deleteAll();
     void deleteById(long id);
     void updatePerson(BEFriend p);

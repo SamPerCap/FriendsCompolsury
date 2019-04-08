@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -15,14 +16,12 @@ import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
-import android.webkit.PermissionRequest;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.File;
 
 import dk.easv.friendsv2.R;
@@ -32,23 +31,33 @@ public class DetailActivity extends FragmentActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
-    IDataCRUD _dataCRUD = MainActivity.dataCRUD;
-    MarkerOptions friend_marker;
+    DataAccessFactory _dataAccess;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
-
+    Button updateBtn;
+    long _contactID;
     private Bitmap mImageBitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "Detail Activity started");
-
         LocateItems();
         setGUI();
+        _dataAccess = new DataAccessFactory();
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
+                        etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
+                        etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
+                finish();
+            }
+        });
     }
 
     private void processFile()
@@ -78,19 +87,29 @@ public class DetailActivity extends FragmentActivity {
         etURL = findViewById(R.id.etURL);
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
+        updateBtn = findViewById(R.id.btnUPDATE);
     }
 
     private void setGUI() {
-        if (_dataCRUD.getAllPersons().size() < 0) {
+        if (_dataAccess.getInstance().getAllPersons().size() < 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            for (BEFriend person : _dataCRUD.getAllPersons()) {
-                //BEFriend f = (BEFriend) getIntent().getSerializableExtra("friend");
+            for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
                 Log.d(TAG, "setGUI: " + person.toString());
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
                 etPhone.setText(person.getM_phone());
-                mImageView.setImageResource(person.getM_img());
+                etAddress.setText(person.getM_address());
+                etBirthday.setText(person.getM_birthday());
+                etURL.setText(person.getM_webSite());
+                try {
+                    mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
+                }
+                catch (Exception ex)
+                {
+                    Log.d(TAG, "Can't parse this to image: " + person.getM_img());
+                    Log.d(TAG, ""+ex);
+                }
             }
         }
     }
@@ -280,8 +299,7 @@ public class DetailActivity extends FragmentActivity {
         }
     }
 
-    private void addData(Intent x, BEFriend f)
-    {
+    private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
 

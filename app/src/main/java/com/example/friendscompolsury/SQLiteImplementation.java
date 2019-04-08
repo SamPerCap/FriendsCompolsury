@@ -1,5 +1,6 @@
 package com.example.friendscompolsury;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,20 +34,20 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
-    public long addPerson(BEFriend p) {
+    public void addPerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Adding a new person.");
-        this.insertStmt.bindString(1, p.getM_name());
-        this.insertStmt.bindString(2, p.getM_address());
-        this.insertStmt.bindString(3, p.getM_phone());
-        this.insertStmt.bindString(4, p.getM_email());
-        this.insertStmt.bindString(5, p.getM_webSite());
-        this.insertStmt.bindString(6, p.getM_birthday());
-        this.insertStmt.bindDouble(7, p.getM_location_x());
-        this.insertStmt.bindDouble(8, p.getM_location_y());
-        this.insertStmt.bindDouble(9, p.getM_img());
-        long id = this.insertStmt.executeInsert();
-        p.setM_id(id);
-        return id;
+        ContentValues values = new ContentValues();
+        values.put("name", p.getM_name());
+        values.put("address", p.getM_address());
+        values.put("number", p.getM_phone());
+        values.put("email",p.getM_email());
+        values.put("website", p.getM_webSite());
+        values.put("birthday",p.getM_birthday());
+        values.put("location_x",p.getM_location_x());
+        values.put("location_y",p.getM_location_y());
+        values.put("picture",p.getM_img());
+        this.db.insert(TABLE_NAME,null,values);
+        Log.d(TAG,"Adding a new person finished");
     }
 
     @Override
@@ -64,6 +65,19 @@ public class SQLiteImplementation implements IDataCRUD {
     @Override
     public void updatePerson(BEFriend p) {
         Log.d(MainActivity.TAG, "Updating a person " + p.getM_id());
+        ContentValues values = new ContentValues();
+        //name, address, number, email, website, birthday ,location_x, location_y, picture
+        values.put("name", p.getM_name());
+        values.put("address", p.getM_address());
+        values.put("number", p.getM_phone());
+        values.put("email",p.getM_email());
+        values.put("website", p.getM_webSite());
+        values.put("birthday",p.getM_birthday());
+        values.put("location_x",p.getM_location_x());
+        values.put("location_y",p.getM_location_y());
+        values.put("picture",p.getM_img());
+        this.db.update(TABLE_NAME, values, "id="+p.getM_id(), null);
+        Log.d(TAG,"Update done");
 
     }
 
@@ -82,7 +96,7 @@ public class SQLiteImplementation implements IDataCRUD {
                 list.add(new BEFriend(cursor.getLong(0), cursor.getString(1),
                         cursor.getString(2), cursor.getString(3), cursor.getString(4),
                         cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
-                        cursor.getFloat(8), cursor.getInt(9)));
+                        cursor.getFloat(8), cursor.getString(9)));
             } while (cursor.moveToNext());
         }
         if (!cursor.isClosed()) {
@@ -101,7 +115,7 @@ public class SQLiteImplementation implements IDataCRUD {
             return new BEFriend(cursor.getLong(0), cursor.getString(1),
                     cursor.getString(2), cursor.getString(3), cursor.getString(4),
                     cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
-                    cursor.getFloat(8), cursor.getInt(9));
+                    cursor.getFloat(8), cursor.getString(9));
         }
         throw new IllegalArgumentException("Could not get Person by Id " + id);
     }
@@ -117,7 +131,7 @@ public class SQLiteImplementation implements IDataCRUD {
             Log.d(MainActivity.TAG, "onCreate: table");
             db.execSQL("CREATE TABLE " + TABLE_NAME
                     + " (id INTEGER PRIMARY KEY, name TEXT, address TEXT, number TEXT, email TEXT," +
-                    "website TEXT,birthday TEXT,  location_x REAL, location_y REAL, picture INTEGER)");
+                    "website TEXT,birthday TEXT,  location_x REAL, location_y REAL, picture TEXT)");
         }
 
         @Override
