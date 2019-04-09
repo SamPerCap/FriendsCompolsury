@@ -52,4 +52,6 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.hardware.location.network" />
+    <uses-permission android:name="android.hardware.location.gps" />
 </manifest>
