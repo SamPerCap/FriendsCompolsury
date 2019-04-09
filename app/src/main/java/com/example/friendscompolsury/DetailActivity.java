@@ -496,7 +496,7 @@ public class DetailActivity extends FragmentActivity {
     public void openWebURL( String inURL ) {
 
         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( inURL ) );
-        if ( !inURL.contains("https://") ) {
+        if ( !inURL.startsWith("https://") ) {
             Toast.makeText(this, "Must type https://", Toast.LENGTH_LONG)
                     .show();
         }
