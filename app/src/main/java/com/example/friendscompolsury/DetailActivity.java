@@ -43,7 +43,7 @@ public class DetailActivity extends FragmentActivity {
     ImageView mImageView;
     GoogleMap m_map;
     Button updateBtn;
-    BEFriend f;
+    BEFriend currentFriend;
 
     private Bitmap mImageBitmap;
     private static final int READ_REQUEST_CODE = 42;
@@ -65,6 +65,7 @@ public class DetailActivity extends FragmentActivity {
                 startActivity(new Intent(DetailActivity.this, MainActivity.class));
             }
         });
+        Log.d(TAG,"current friend" + currentFriend);
     }
 
     private void showFileChooser() {
@@ -92,19 +93,19 @@ public class DetailActivity extends FragmentActivity {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            BEFriend person = _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
-                Log.d(TAG, "setGUI: " + person.toString());
+            currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
+                Log.d(TAG, "setGUI: " + currentFriend.toString());
 
-                etName.setText(person.getM_name());
-                etEmail.setText(person.getM_email());
-                etPhone.setText(person.getM_phone());
-                etAddress.setText(person.getM_address());
-                etBirthday.setText(person.getM_birthday());
-                etURL.setText(person.getM_webSite());
+                etName.setText(currentFriend.getM_name());
+                etEmail.setText(currentFriend.getM_email());
+                etPhone.setText(currentFriend.getM_phone());
+                etAddress.setText(currentFriend.getM_address());
+                etBirthday.setText(currentFriend.getM_birthday());
+                etURL.setText(currentFriend.getM_webSite());
                 try {
-                    mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
+                    mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
                 } catch (Exception ex) {
-                    Log.d(TAG, "Can't parse this to image: " + person.getM_img());
+                    Log.d(TAG, "Can't parse this to image: " + currentFriend.getM_img());
                     Log.d(TAG, "" + ex);
                 }
             }
@@ -307,7 +308,7 @@ public class DetailActivity extends FragmentActivity {
 
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
             
-            f.setM_location(location.getLatitude(), location.getLongitude());
+            currentFriend.setM_location(location.getLatitude(), location.getLongitude());
 
             //Toast.makeText(this, "Cords: " + userLocation, Toast.LENGTH_LONG).show();
 
@@ -362,7 +363,11 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void showMap(View view) {
-
+        Intent x = new Intent(this, MapActivity.class);
+        addData(x, currentFriend);
+        Log.d(TAG, "Detail activity will be started");
+        startActivity(x);
+        Log.d(TAG, "Detail activity is started");
     }
 
     public void saveLocation(View view) {
