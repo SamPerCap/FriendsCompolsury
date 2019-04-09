@@ -73,6 +73,26 @@ public class DetailActivity extends FragmentActivity {
         updateBtn = findViewById(R.id.btnUPDATE);
     }
 
+    private void getCurrentFriendImage() {
+        try
+        {
+            Bitmap bit = BitmapFactory.decodeFile(currentFriend.getM_img());
+            if(bit != null) {
+                mImageView.setImageBitmap(bit);
+            }
+            else
+            {
+                Log.d(TAG, "Bitmap: is 0 ");
+                mImageView.setImageResource(R.drawable.cake);
+            }
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "file can convertes: ");
+            mImageView.setImageResource(R.drawable.cake);
+        }
+    }
+
     private void setGUI() {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
@@ -229,13 +249,17 @@ public class DetailActivity extends FragmentActivity {
                     == PackageManager.PERMISSION_GRANTED) {
 
                 LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
+                Criteria criteria = new Criteria();
 
                 //Location location = locationManager.getLastKnownLocation(provider);
+                String provider = locationManager.getBestProvider(criteria,false);
 
-                Location location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
-                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if ( provider == null ) {
+                    provider = locationManager.getAllProviders().get(0);
+                }
 
+                Location location = locationManager.getLastKnownLocation(provider);
+                LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
                 currentFriend.setM_location(location.getLatitude(), location.getLongitude());
 
                 Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
