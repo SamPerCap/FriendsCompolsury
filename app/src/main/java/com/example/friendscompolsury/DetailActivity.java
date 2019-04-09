@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -49,16 +50,29 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend", 0), etName.getText().toString(), etAddress.getText().toString(),
-                        etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
-                        etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
-                startActivity(new Intent(DetailActivity.this, MainActivity.class));
-            }
-        });
-        Log.d(TAG, "current friend" + currentFriend);
+        Log.d(TAG,"current friend" + currentFriend);
+    }
+
+    private void updateView() {
+        _dataAccess.updateContact(
+                new BEFriend(getIntent().getLongExtra("friend",0),
+                        etName.getText().toString(),
+                        etAddress.getText().toString(),
+                        etPhone.getText().toString(),
+                        etEmail.getText().toString(),
+                        etURL.getText().toString(),
+                        etBirthday.getText().toString(), 0, 0,
+                        mImageView.getTransitionName())
+        );
+        startActivity(new Intent(DetailActivity.this, MainActivity.class));
+    }
+
+    private void showFileChooser() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        startActivityForResult(i, 42);
     }
 
     private void LocateItems() {
@@ -297,5 +311,9 @@ public class DetailActivity extends FragmentActivity {
 
     private void goToURL(View view) {
         openWebURL(currentFriend.getM_webSite().toString());
+    }
+
+    public void updateCurrentContact(View view) {
+        updateView();
     }
 }

@@ -169,6 +169,7 @@
             android:id="@+id/btnUPDATE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="updateCurrentContact"
             android:text="@string/Update" />
 
         <Button
