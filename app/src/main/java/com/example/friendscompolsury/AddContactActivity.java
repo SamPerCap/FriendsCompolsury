@@ -87,12 +87,12 @@ public class AddContactActivity extends Activity {
                     etSavePhone.getText().toString(), etSaveEmail.getText().toString(), etSaveURL.getText().toString(),
                     etSaveBirthday.getText().toString(), 0, 0, filePath));
             Log.d(TAG, "New person added");
-            startActivity(new Intent(AddContactActivity.this, MainActivity.class));
-    }
+        }
         else
         {
             Toast.makeText(this, "Fill out every fields", Toast.LENGTH_SHORT).show();
         }
+        startActivity(new Intent(AddContactActivity.this, MainActivity.class));
     }
     public void goToCamera(View view) {
         Log.e(TAG, "What happens?");
@@ -150,6 +150,7 @@ public class AddContactActivity extends Activity {
             saveFileInLocalFolder();
         }
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Request: " + RESULT_OK);
             // The document selected by the user won't be returned in the intent.
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.

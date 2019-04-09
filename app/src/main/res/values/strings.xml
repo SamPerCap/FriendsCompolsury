@@ -1,6 +1,8 @@
 <resources>
 
-    <string name="sortByName">sort by name</string>
+    <string name="sortByName">Sort by name</string>
+    <string name="deleteEverything">Remove all contacts</string>
+    <string name="remove">Remove</string>
     <string name="app_name">FriendsCompolsury</string>
     <string name="getPerson">Get Person</string>
     <string name="addPerson">Add Person</string>

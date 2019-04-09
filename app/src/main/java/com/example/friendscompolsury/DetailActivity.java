@@ -20,8 +20,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 import dk.easv.friendsv2.R;
 
@@ -30,15 +34,16 @@ public class DetailActivity extends FragmentActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
-    DataAccessFactory _dataAccess;
+    DataAccessFactory _dataAccess = MainActivity._dataAccess;
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
     BEFriend f;
     Button updateBtn;
-    long _contactID;
-    private Bitmap mImageBitmap;
 
+    private Bitmap mImageBitmap;
+    private static final int FILE_SELECT_CODE = 0;
+    private static final int READ_REQUEST_CODE = 42;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,17 +52,25 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-        _dataAccess = new DataAccessFactory();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                _dataAccess.updateContact(new BEFriend(_contactID, etName.getText().toString(), etAddress.getText().toString(),
+                _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend",0), etName.getText().toString(), etAddress.getText().toString(),
                         etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
                         etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
-                finish();
+                startActivity(new Intent(DetailActivity.this, MainActivity.class));
             }
         });
     }
+
+    private void showFileChooser() {
+        Intent i = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        );
+        startActivityForResult(i, 42);
+    }
+
 
     private void LocateItems() {
         Log.d(TAG, "Locating items");
@@ -72,11 +85,12 @@ public class DetailActivity extends FragmentActivity {
     }
 
     private void setGUI() {
-        if (_dataAccess.getInstance().getAllPersons().size() < 0) {
+        if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            for (BEFriend person : _dataAccess.getInstance().getAllPersons()) {
+            BEFriend person = _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
                 Log.d(TAG, "setGUI: " + person.toString());
+
                 etName.setText(person.getM_name());
                 etEmail.setText(person.getM_email());
                 etPhone.setText(person.getM_phone());
@@ -85,15 +99,13 @@ public class DetailActivity extends FragmentActivity {
                 etURL.setText(person.getM_webSite());
                 try {
                     mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Log.d(TAG, "Can't parse this to image: " + person.getM_img());
-                    Log.d(TAG, ""+ex);
+                    Log.d(TAG, "" + ex);
                 }
             }
         }
-    }
+
 
     private void sendSMS() {
         Log.d(TAG, "sendSMS method invoked");
@@ -165,7 +177,7 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void camButton(View view) {
-        Log.e(TAG, "What happens?");
+        Log.e(TAG, "Cam button pressed");
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -193,6 +205,29 @@ public class DetailActivity extends FragmentActivity {
 
             mImageBitmap = (Bitmap) b.get("data");
             mImageView.setImageBitmap(mImageBitmap);
+        }
+        if (requestCode == READ_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Get the Uri of the selected file
+            Uri uri = data.getData();
+            Log.d(TAG, "File Uri: " + uri.toString());
+            // Get the path
+            //String  path = null;
+            String path = FileChooser.mf_szGetRealPathFromURI(this, uri);
+                /*try {
+                    path = FileUtils.getPath(this, uri);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    Log.e(TAG,"path: " + e);
+                }*/
+
+            Log.d(TAG, "File Path: " + path);
+            // Get the file instance
+            //File file = new File(path);
+            // Initiate the upload
+            Log.d(TAG, "Get the file path: " + path );
+
+            mImageView.setImageBitmap(BitmapFactory.decodeFile(path));
+            Log.i(TAG, "Uri: " + path);
         }
     }
 
@@ -255,20 +290,36 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void getLocation(View view) {
-        Log.d(TAG, "Detail activity will be started");
+        /*Log.d(TAG, "Detail activity will be started");
         f = (BEFriend) getIntent().getSerializableExtra("friend");
         Intent x = new Intent(this, MapActivity.class);
         addData(x, f);
         startActivity(x);
-        Log.d(TAG, "Detail activity is started");
+        Log.d(TAG, "Detail activity is started");*/
+
+        try{
+            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
+                if ( ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_DOCUMENTS)
+                        == PackageManager.PERMISSION_DENIED ) {
+                    String[] permissions = {Manifest.permission.MANAGE_DOCUMENTS};
+                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+                }
+
+                else {
+                    Toast.makeText(this, "Permission failed: " +  PackageManager.PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }catch(Exception e) {
+            Log.e(TAG, "FileChooser error: " + e);
+        }
     }
 
     private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
 
-    public void goToCamera(View view) {
-        Log.e(TAG, "What happens?");
+    private void takePicture()
+    {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
@@ -286,5 +337,27 @@ public class DetailActivity extends FragmentActivity {
             //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    public void goToCamera(View view) {
+        Log.e(TAG, "What happens?");
+        final String[] options = {"Select image", "Take new image"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pick a color");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(options[which].equals(options[0]))
+                {
+                    showFileChooser();
+                }
+                if(options[which].equals(options[1]))
+                {
+                    takePicture();
+                }
+            }
+        });
+        builder.show();
     }
 }
