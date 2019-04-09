@@ -10,14 +10,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,8 +22,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
+import com.example.friendscompolsury.Shared.CamaraIntent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +34,8 @@ import java.util.Date;
 import dk.easv.friendsv2.R;
 
 public class AddContactActivity extends Activity {
+    String className  ="AddContactActivity";
+     String messageToCamara = "activityClass";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private String TAG = MainActivity.TAG;
@@ -46,6 +45,9 @@ public class AddContactActivity extends Activity {
     private ImageView _pictureView;
     Bitmap mImageBitmap;
     String filePath;
+    Context context;
+    Intent camaraintent;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class AddContactActivity extends Activity {
 
     private void locateItems()
     {
+        context = this;
         saveContactButton = findViewById(R.id.SaveContactButton);
         etSaveName = findViewById(R.id.etSName);
         etSaveEmail = findViewById(R.id.etSEmail);
@@ -71,6 +74,24 @@ public class AddContactActivity extends Activity {
         etSavePhone = findViewById(R.id.etSPhone);
         etSaveBirthday = findViewById(R.id.etSBirthday);
         _pictureView = findViewById(R.id.pictureView);
+        try{
+            Intent intent = getIntent();
+             filePath = intent.getStringExtra(messageToCamara);
+            if(filePath!=null)
+            {
+                    Bitmap bit = BitmapFactory.decodeFile(filePath);
+                    if(bit != null) {
+                        _pictureView.setImageBitmap(bit);
+                    }
+
+
+            }
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "locateItems: images " +ex);
+        }
+
     }
 
     private void saveContactInDatabase() {
@@ -111,7 +132,11 @@ public class AddContactActivity extends Activity {
                 }
                 if(options[which].equals(options[1]))
                 {
-                    takePicture();
+
+
+                    camaraintent = new Intent(context, CamaraIntent.class);
+                   camaraintent.putExtra(messageToCamara,className);
+                    startActivity(camaraintent);
                 }
             }
         });
@@ -119,37 +144,11 @@ public class AddContactActivity extends Activity {
 
 
     }
-    public void takePicture()
-    {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
-
-                if (checkSelfPermission(Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED) {
-
-                    Log.d(TAG, "permission denied to CAMERA - requesting it");
-                    String[] permissions = {Manifest.permission.CAMERA};
-
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
-            }
-            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
-            //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
-            Bundle b = data.getExtras();
-            mImageBitmap = (Bitmap) b.get("data");
-            _pictureView.setImageBitmap(mImageBitmap);
-            saveFileInLocalFolder();
-        }
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Request: " + RESULT_OK);
             // The document selected by the user won't be returned in the intent.
@@ -167,72 +166,8 @@ public class AddContactActivity extends Activity {
             }
         }
     }
-    private void saveFileInLocalFolder() {
-        FileOutputStream outputPhoto = null;
-        try {
-            File f = getOutputMediaFile();
-            outputPhoto = new FileOutputStream(f);
-            mImageBitmap
-                    .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
-            Log.d(TAG, "Photo taken - size: " + f.length() );
-            Log.d(TAG, "     Location: " + f.getAbsolutePath());
-            filePath = f.getAbsolutePath();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (outputPhoto != null) {
-                    outputPhoto.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private File getOutputMediaFile(){
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
 
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-
-                Log.d(TAG, "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), getResources().getString(R.string.app_name));
-
-            // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists()) {
-                if (!mediaStorageDir.mkdirs()) {
-                    Log.d(TAG, "failed to create directory");
-                    return null;
-                }
-            }
-
-            // Create a media file name
-            String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-            String postfix = "jpg";
-            String prefix = "IMG";
-
-            File mediaFile = new File(mediaStorageDir.getPath() +
-                    File.separator + prefix +
-                    "_" + timeStamp + "." + postfix);
-
-            return mediaFile;
-        }
-        Log.d(TAG, "Permission for writing NOT granted");
-        return null;
-    }
     private static final int READ_REQUEST_CODE = 42;
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.

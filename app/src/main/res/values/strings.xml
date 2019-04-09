@@ -22,4 +22,5 @@
     <string name="Update">Update</string>
     <string name="Address">Address</string>
     <string name="Birthday">Birthday</string>
+    <string name="activityClass">activityClass</string>
 </resources>
