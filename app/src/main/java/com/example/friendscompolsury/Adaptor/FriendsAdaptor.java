@@ -45,19 +45,20 @@ public class FriendsAdaptor extends ArrayAdapter<BEFriend> {
         ImageView imageView = (ImageView) rowView.findViewById(R.id.image);
         txtTitle.setText(_dataAccess.getFriendsList().get(position).getM_name());
         try
-        {Bitmap bit = BitmapFactory.decodeFile(_dataAccess.getFriendsList().get(position).getM_img());
-        if(bit != null) {
+        {
+            Bitmap bit = BitmapFactory.decodeFile(_dataAccess.getFriendsList().get(position).getM_img());
+            if(bit != null) {
             imageView.setImageBitmap(bit);
         /* Old code for backup by the flies.
         for (BEFriend person : _dataAccess.getFriendsList()) {
             txtTitle.setText(person.getM_name());
             imageView.setImageResource(person.getM_img());*/
-        }
-        else
-        {
-            Log.d(TAG, "Bitmap: is 0 ");
-            imageView.setImageResource(R.drawable.cake);
-        }
+            }
+            else
+            {
+                Log.d(TAG, "Bitmap: is 0 ");
+                imageView.setImageResource(R.drawable.cake);
+            }
         }
         catch(Exception ex)
         {
