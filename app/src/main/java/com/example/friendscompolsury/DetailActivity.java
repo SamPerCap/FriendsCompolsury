@@ -2,6 +2,7 @@ package com.example.friendscompolsury;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -63,7 +64,14 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG,"current friend" + currentFriend);
     }
 
-    private void updateView() {
+    /* When update button is clicked it will save all the changes to the
+        DataAccessFactory class
+     */
+
+    private void updateView()
+    {
+        // Goes to DataAccessFactory and in to a method that
+        // updates the contact by getting the changes that have been made to each textfield
         _dataAccess.updateContact(
                 new BEFriend(getIntent().getLongExtra("friend",0),
                         etName.getText().toString(),
@@ -74,10 +82,13 @@ public class DetailActivity extends FragmentActivity {
                         etBirthday.getText().toString(), 0, 0,
                         mImageView.getTransitionName())
         );
+        // When done, go to main activity, user should see the changes
         startActivity(new Intent(DetailActivity.this, MainActivity.class));
     }
 
-    private void showFileChooser() {
+    private void showFileChooser()
+    {
+        // Open the file chooser where user can find an image
         Intent i = new Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -131,12 +142,7 @@ public class DetailActivity extends FragmentActivity {
                 etAddress.setText(currentFriend.getM_address());
                 etBirthday.setText(currentFriend.getM_birthday());
                 etURL.setText(currentFriend.getM_webSite());
-                try {
-                    mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
-                } catch (Exception ex) {
-                    Log.d(TAG, "Can't parse this to image: " + currentFriend.getM_img());
-                    Log.d(TAG, "" + ex);
-                }
+
             }
         }
 
@@ -211,10 +217,10 @@ public class DetailActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-            //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
             Bundle b = data.getExtras();
 
             mImageBitmap = (Bitmap) b.get("data");
@@ -295,25 +301,31 @@ public class DetailActivity extends FragmentActivity {
 
     public void currentLocation()
     {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try
+        {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED)
+            {
+                LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-            Criteria criteria = new Criteria();
+                Criteria criteria = new Criteria();
 
-            String provider = service.getBestProvider(criteria, false);
+                String provider = locationManager.getBestProvider(criteria,false);
+                Location location = locationManager.getLastKnownLocation(provider);
+                if ( location == null ) {
 
-            if ( provider == null ) {
-                provider = service.getAllProviders().get(0);
+                    location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
+                }
+
+                LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
+                currentFriend.setM_location(location.getLatitude(), location.getLongitude());
+
+                Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
             }
-
-            Location location = service.getLastKnownLocation(provider);
-
-            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-            
-            currentFriend.setM_location(location.getLatitude(), location.getLongitude());
-
-            Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, "Exception: " +ex);
         }
     }
     private void addData(Intent x, BEFriend f) {
@@ -323,10 +335,10 @@ public class DetailActivity extends FragmentActivity {
     private void takePicture()
     {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-
+        if (cameraIntent.resolveActivity(getPackageManager()) != null)
+        {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+            {
                 if (checkSelfPermission(Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_DENIED) {
 
@@ -336,20 +348,26 @@ public class DetailActivity extends FragmentActivity {
                     requestPermissions(permissions, PERMISSION_REQUEST_CODE);
                 }
             }
-            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
-    public void goToCamera(View view) {
+    public void goToCamera(View view)
+    {
         Log.e(TAG, "What happens?");
         final String[] options = {"Select image", "Take new image"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a color");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+        builder.setItems(options, new DialogInterface.OnClickListener()
+        {
+            /*
+            * Give the user an option to either choose an image that already exists on the phone
+            * or to take a picture
+            * */
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 if(options[which].equals(options[0]))
                 {
                     showFileChooser();
@@ -364,11 +382,17 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void showMap(View view) {
-        Intent x = new Intent(this, MapActivity.class);
-        addData(x, currentFriend);
-        Log.d(TAG, "Detail activity will be started");
-        startActivity(x);
-        Log.d(TAG, "Detail activity is started");
+       try {
+           Intent x = new Intent(this, MapActivity.class);
+           addData(x, currentFriend);
+           Log.d(TAG, "Detail activity will be started");
+           startActivity(x);
+           Log.d(TAG, "Detail activity is started");
+       }
+       catch (Exception ex)
+       {
+           Log.d(TAG, "showMap: "+ ex);
+       }
     }
 
     public void saveLocation(View view) {
