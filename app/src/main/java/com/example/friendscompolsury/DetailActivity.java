@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -38,11 +42,10 @@ public class DetailActivity extends FragmentActivity {
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
-    BEFriend f;
     Button updateBtn;
+    BEFriend f;
 
     private Bitmap mImageBitmap;
-    private static final int FILE_SELECT_CODE = 0;
     private static final int READ_REQUEST_CODE = 42;
 
     @Override
@@ -54,7 +57,8 @@ public class DetailActivity extends FragmentActivity {
         setGUI();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend",0), etName.getText().toString(), etAddress.getText().toString(),
                         etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
                         etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
@@ -289,31 +293,27 @@ public class DetailActivity extends FragmentActivity {
 
     }
 
-    public void getLocation(View view) {
-        /*Log.d(TAG, "Detail activity will be started");
-        f = (BEFriend) getIntent().getSerializableExtra("friend");
-        Intent x = new Intent(this, MapActivity.class);
-        addData(x, f);
-        startActivity(x);
-        Log.d(TAG, "Detail activity is started");*/
+    public void currentLocation()
+    {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        try{
-            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
-                if ( ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_DOCUMENTS)
-                        == PackageManager.PERMISSION_DENIED ) {
-                    String[] permissions = {Manifest.permission.MANAGE_DOCUMENTS};
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
+            Criteria criteria = new Criteria();
 
-                else {
-                    Toast.makeText(this, "Permission failed: " +  PackageManager.PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }catch(Exception e) {
-            Log.e(TAG, "FileChooser error: " + e);
+            String provider = service.getBestProvider(criteria, false);
+
+            Location location = service.getLastKnownLocation(provider);
+
+            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            
+            f.setM_location(location.getLatitude(), location.getLongitude());
+
+            //Toast.makeText(this, "Cords: " + userLocation, Toast.LENGTH_LONG).show();
+
+            //_dataAccess.updateContact(location.getLatitude(),location.getLongitude());
         }
     }
-
     private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
@@ -359,5 +359,13 @@ public class DetailActivity extends FragmentActivity {
             }
         });
         builder.show();
+    }
+
+    public void showMap(View view) {
+
+    }
+
+    public void saveLocation(View view) {
+        currentLocation();
     }
 }

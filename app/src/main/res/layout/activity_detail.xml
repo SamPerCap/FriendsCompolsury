@@ -163,17 +163,24 @@
         android:weightSum="4">
 
         <Button
-            android:id="@+id/btnLocation"
+            android:id="@+id/saveLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="getLocation"
-            android:text="@string/Home" />
+            android:onClick="saveLocation"
+            android:text="Save Location" />
+
+        <Button
+            android:id="@+id/showMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="showMap"
+            android:layout_weight="1"
+            android:text="Show Map" />
 
         <Button
             android:id="@+id/btnUPDATE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="updateContact"
             android:text="@string/Update" />
     </LinearLayout>
 
