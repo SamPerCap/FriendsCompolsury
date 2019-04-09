@@ -372,10 +372,13 @@ public class DetailActivity extends FragmentActivity {
         currentLocation();
     }
 
-    public void goToURL(View view) {
-        String inURL = currentFriend.getM_webSite();
+    public void openWebURL( String inURL ) {
         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( inURL ) );
 
         startActivity( browse );
+    }
+
+    public void goToURL(View view) {
+        openWebURL(currentFriend.getM_webSite().toString());
     }
 }
