@@ -303,12 +303,12 @@ public class DetailActivity extends FragmentActivity {
 
                 //Location location = locationManager.getLastKnownLocation(provider);
                 String provider = locationManager.getBestProvider(criteria,false);
+                Location location = locationManager.getLastKnownLocation(provider);
+                if ( location == null ) {
 
-                if ( provider == null ) {
-                    provider = locationManager.getAllProviders().get(0);
+                    location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
                 }
 
-                Location location = locationManager.getLastKnownLocation(provider);
                 LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
                 currentFriend.setM_location(location.getLatitude(), location.getLongitude());
 
