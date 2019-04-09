@@ -310,9 +310,7 @@ public class DetailActivity extends FragmentActivity {
             
             currentFriend.setM_location(location.getLatitude(), location.getLongitude());
 
-            //Toast.makeText(this, "Cords: " + userLocation, Toast.LENGTH_LONG).show();
-
-            //_dataAccess.updateContact(location.getLatitude(),location.getLongitude());
+            Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
         }
     }
     private void addData(Intent x, BEFriend f) {
