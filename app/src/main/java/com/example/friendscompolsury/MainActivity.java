@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         _dataAccess.init(MainActivity.this);
         context = this;
 
-
+        askPremision();
         list = (ListView) findViewById(R.id.listview);
 
         SettingAdapter();
@@ -77,39 +77,39 @@ public class MainActivity extends AppCompatActivity {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
 
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.SEND_SMS)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.CALL_PHONE)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.INTERNET)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_DENIED
-                        ||checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-                        == PackageManager.PERMISSION_DENIED) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.CAMERA)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.SEND_SMS)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.CALL_PHONE)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.INTERNET)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+                    == PackageManager.PERMISSION_DENIED) {
 
-                    Log.d(TAG, "permission denied to CAMERA - requesting it");
-                    String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE
-                            ,Manifest.permission.CAMERA
-                            ,Manifest.permission.SEND_SMS
-                            ,Manifest.permission.CALL_PHONE
-                            ,Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            ,Manifest.permission.INTERNET
-                            ,Manifest.permission.ACCESS_FINE_LOCATION
-                            ,Manifest.permission.ACCESS_COARSE_LOCATION
-                            ,Manifest.permission.ACCESS_NETWORK_STATE};
+                Log.d(TAG, "permission denied to CAMERA - requesting it");
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE
+                        , Manifest.permission.CAMERA
+                        , Manifest.permission.SEND_SMS
+                        , Manifest.permission.CALL_PHONE
+                        , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        , Manifest.permission.INTERNET
+                        , Manifest.permission.ACCESS_FINE_LOCATION
+                        , Manifest.permission.ACCESS_COARSE_LOCATION
+                        , Manifest.permission.ACCESS_NETWORK_STATE};
 
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
-
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+        }}
 
     private void SettingAdapter() {
         adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
