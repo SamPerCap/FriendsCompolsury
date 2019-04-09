@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -51,7 +50,6 @@ public class DetailActivity extends FragmentActivity {
     ImageView mImageView;
     GoogleMap m_map;
     Button updateBtn;
-    String filePath;
     BEFriend currentFriend;
 
     private Bitmap mImageBitmap;
@@ -73,18 +71,15 @@ public class DetailActivity extends FragmentActivity {
 
     private void updateView()
     {
+        currentFriend.setM_address(etAddress.getText().toString());
+        currentFriend.setM_birthday(etBirthday.getText().toString());
+        currentFriend.setM_email(etEmail.getText().toString());
+        currentFriend.setM_phone(etPhone.getText().toString());
+        currentFriend.setM_webSite(etURL.getText().toString());
+        currentFriend.setM_name(etName.getText().toString());
         // Goes to DataAccessFactory and in to a method that
         // updates the contact by getting the changes that have been made to each textfield
-        _dataAccess.updateContact(
-                new BEFriend(getIntent().getLongExtra("friend",0),
-                        etName.getText().toString(),
-                        etAddress.getText().toString(),
-                        etPhone.getText().toString(),
-                        etEmail.getText().toString(),
-                        etURL.getText().toString(),
-                        etBirthday.getText().toString(), 0, 0,
-                        filePath)
-        );
+        _dataAccess.updateContact(currentFriend);
         // When done, go to main activity, user should see the changes
         startActivity(new Intent(DetailActivity.this, MainActivity.class));
     }
@@ -137,6 +132,7 @@ public class DetailActivity extends FragmentActivity {
             Log.d(TAG, "The database is empty");
         } else {
             currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
+
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
                 getCurrentFriendImage();
                 etName.setText(currentFriend.getM_name());
@@ -219,26 +215,6 @@ public class DetailActivity extends FragmentActivity {
         startActivity(emailIntent);
     }
 
-    public void camButton(View view) {
-        Log.e(TAG, "Cam button pressed");
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-                if (checkSelfPermission(Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED) {
-
-                    Log.d(TAG, "permission denied to CAMERA - requesting it");
-                    String[] permissions = {Manifest.permission.CAMERA};
-
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
-            }
-            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -249,7 +225,9 @@ public class DetailActivity extends FragmentActivity {
             mImageBitmap = (Bitmap) b.get("data");
             mImageView.setImageBitmap(mImageBitmap);
             saveFileInLocalFolder();
+
         }
+
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Request: " + RESULT_OK);
             // The document selected by the user won't be returned in the intent.
@@ -260,9 +238,9 @@ public class DetailActivity extends FragmentActivity {
             Uri uri = null;
             if (data != null) {
                 uri = data.getData();
-                filePath = mf_szGetRealPathFromURI(this,uri);
-                mImageView.setImageBitmap(BitmapFactory.decodeFile(filePath));
-                Log.i(TAG, "Uri: " + filePath);
+                currentFriend.setM_img(mf_szGetRealPathFromURI(this,uri));
+                mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
+                Log.i(TAG, "Uri: " + currentFriend.getM_img());
                 // showImage(uri);
             }
         }
@@ -297,7 +275,7 @@ public class DetailActivity extends FragmentActivity {
                     .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
             Log.d(TAG, "Photo taken - size: " + f.length() );
             Log.d(TAG, "     Location: " + f.getAbsolutePath());
-            filePath = f.getAbsolutePath();
+            currentFriend.setM_img(f.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -350,6 +328,7 @@ public class DetailActivity extends FragmentActivity {
                     "_" + timeStamp + "." + postfix);
 
             return mediaFile;
+
         }
         Log.d(TAG, "Permission for writing NOT granted");
         return null;
@@ -410,6 +389,7 @@ public class DetailActivity extends FragmentActivity {
             String text = "Hi, it goes well on the android course...";
             m.sendTextMessage(etPhone.getText().toString(), null, text, null, null);
         }
+
 
     }
 
@@ -515,8 +495,12 @@ public class DetailActivity extends FragmentActivity {
 
     public void openWebURL( String inURL ) {
         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( inURL ) );
-
-        startActivity( browse );
+        if ( !inURL.contains("https://") ) {
+            Toast.makeText(this, "Must type https://", Toast.LENGTH_LONG)
+                    .show();
+        }
+        else
+            startActivity( browse );
     }
 
     public void goToURL(View view) {
@@ -526,4 +510,5 @@ public class DetailActivity extends FragmentActivity {
     public void updateCurrentContact(View view) {
         updateView();
     }
+
 }
