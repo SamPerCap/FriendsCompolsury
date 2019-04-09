@@ -28,9 +28,6 @@ import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
 import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
@@ -303,6 +300,10 @@ public class DetailActivity extends FragmentActivity {
             Criteria criteria = new Criteria();
 
             String provider = service.getBestProvider(criteria, false);
+
+            if ( provider == null ) {
+                provider = service.getAllProviders().get(0);
+            }
 
             Location location = service.getLastKnownLocation(provider);
 
