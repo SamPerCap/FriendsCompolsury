@@ -142,12 +142,7 @@ public class DetailActivity extends FragmentActivity {
                 etAddress.setText(currentFriend.getM_address());
                 etBirthday.setText(currentFriend.getM_birthday());
                 etURL.setText(currentFriend.getM_webSite());
-                try {
-                    mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
-                } catch (Exception ex) {
-                    Log.d(TAG, "Can't parse this to image: " + currentFriend.getM_img());
-                    Log.d(TAG, "" + ex);
-                }
+
             }
         }
 
