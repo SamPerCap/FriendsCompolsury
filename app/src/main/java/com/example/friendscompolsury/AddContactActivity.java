@@ -61,7 +61,8 @@ public class AddContactActivity extends Activity {
         });
     }
 
-    private void locateItems() {
+    private void locateItems()
+    {
         saveContactButton = findViewById(R.id.SaveContactButton);
         etSaveName = findViewById(R.id.etSName);
         etSaveEmail = findViewById(R.id.etSEmail);
@@ -73,6 +74,7 @@ public class AddContactActivity extends Activity {
     }
 
     private void saveContactInDatabase() {
+
         if(!etSaveAddress.getText().equals(null)
         && !etSaveName.getText().equals(null)
         && !etSaveBirthday.getText().equals(null)
@@ -135,7 +137,6 @@ public class AddContactActivity extends Activity {
             }
             //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-
         }
     }
 
