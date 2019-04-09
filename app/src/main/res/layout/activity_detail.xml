@@ -155,7 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="saveLocation"
-            android:text="Save Location" />
+            android:text="@string/save_location" />
 
         <Button
             android:id="@+id/showMap"
@@ -163,7 +163,7 @@
             android:layout_height="wrap_content"
             android:onClick="showMap"
             android:layout_weight="1"
-            android:text="Show Map" />
+            android:text="@string/show_map" />
 
         <Button
             android:id="@+id/btnUPDATE"
@@ -178,7 +178,7 @@
             android:layout_height="wrap_content"
             android:onClick="goToURL"
             android:layout_weight="1"
-            android:text="URL" />
+            android:text="@string/URL" />
     </LinearLayout>
 
 
