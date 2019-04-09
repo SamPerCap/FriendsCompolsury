@@ -87,13 +87,33 @@ public class DetailActivity extends FragmentActivity {
         updateBtn = findViewById(R.id.btnUPDATE);
     }
 
+    private void getCurrentFriendImage() {
+        try
+        {
+            Bitmap bit = BitmapFactory.decodeFile(currentFriend.getM_img());
+            if(bit != null) {
+                mImageView.setImageBitmap(bit);
+            }
+            else
+            {
+                Log.d(TAG, "Bitmap: is 0 ");
+                mImageView.setImageResource(R.drawable.cake);
+            }
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "file can convertes: ");
+            mImageView.setImageResource(R.drawable.cake);
+        }
+    }
+
     private void setGUI() {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
             currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
-
+                getCurrentFriendImage();
                 etName.setText(currentFriend.getM_name());
                 etEmail.setText(currentFriend.getM_email());
                 etPhone.setText(currentFriend.getM_phone());
