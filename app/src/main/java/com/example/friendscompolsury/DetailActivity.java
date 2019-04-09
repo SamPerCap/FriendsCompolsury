@@ -376,6 +376,7 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void openWebURL( String inURL ) {
+
         Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( inURL ) );
         if ( !inURL.contains("https://") ) {
             Toast.makeText(this, "Must type https://", Toast.LENGTH_LONG)
@@ -386,7 +387,7 @@ public class DetailActivity extends FragmentActivity {
     }
 
     public void goToURL(View view) {
-        openWebURL(currentFriend.getM_webSite().toString());
+        openWebURL(currentFriend.getM_webSite().toLowerCase());
     }
 
     public void updateCurrentContact(View view) {
