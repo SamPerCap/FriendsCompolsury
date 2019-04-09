@@ -38,14 +38,21 @@ public class MapActivity extends FragmentActivity  implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_details);
-        Log.d(TAG, "Detail Activity started");
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.map_details);
+            Log.d(TAG, "Detail Activity started");
 
-        MapFragment mapFragment =
-                (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-        initMap();
+            MapFragment mapFragment =
+                    (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+            initMap();
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "onCreate map: " + ex);
+        }
+
     }
 
     @Override
@@ -119,10 +126,12 @@ public class MapActivity extends FragmentActivity  implements
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED )
         {
-            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, true));
+
+            //Location location = locationManager.getLastKnownLocation(provider);
+
+            Location location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
 
             Log.d(TAG, "zoomToCurrentLocation: " + location);
             if (location != null)
@@ -144,13 +153,11 @@ public class MapActivity extends FragmentActivity  implements
     {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+            LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
-            Criteria criteria = new Criteria();
 
-            String provider = service.getBestProvider(criteria, false);
 
-            Location location = service.getLastKnownLocation(provider);
+            Location location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
 
             LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
