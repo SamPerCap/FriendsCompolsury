@@ -29,9 +29,6 @@ import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.File;
-import java.net.URISyntaxException;
-
 import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
@@ -302,13 +299,17 @@ public class DetailActivity extends FragmentActivity {
                     == PackageManager.PERMISSION_GRANTED) {
 
                 LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
+                Criteria criteria = new Criteria();
 
                 //Location location = locationManager.getLastKnownLocation(provider);
+                String provider = locationManager.getBestProvider(criteria,false);
 
-                Location location = locationManager.getLastKnownLocation(locationManager.getAllProviders().get(0));
-                LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                if ( provider == null ) {
+                    provider = locationManager.getAllProviders().get(0);
+                }
 
+                Location location = locationManager.getLastKnownLocation(provider);
+                LatLng userLocation = new LatLng(location.getLatitude(),location.getLongitude());
                 currentFriend.setM_location(location.getLatitude(), location.getLongitude());
 
                 Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
