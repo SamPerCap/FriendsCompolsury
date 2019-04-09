@@ -29,6 +29,9 @@ import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
 import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
@@ -53,19 +56,22 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG, "Detail Activity started");
         LocateItems();
         setGUI();
-        updateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view)
-            {
-                _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend",0), etName.getText().toString(), etAddress.getText().toString(),
-                        etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
-                        etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
-                startActivity(new Intent(DetailActivity.this, MainActivity.class));
-            }
-        });
         Log.d(TAG,"current friend" + currentFriend);
     }
 
+    private void updateView() {
+        _dataAccess.updateContact(
+                new BEFriend(getIntent().getLongExtra("friend",0),
+                        etName.getText().toString(),
+                        etAddress.getText().toString(),
+                        etPhone.getText().toString(),
+                        etEmail.getText().toString(),
+                        etURL.getText().toString(),
+                        etBirthday.getText().toString(), 0, 0,
+                        mImageView.getTransitionName())
+        );
+        startActivity(new Intent(DetailActivity.this, MainActivity.class));
+    }
     private void showFileChooser() {
         Intent i = new Intent(
                 Intent.ACTION_PICK,
@@ -85,6 +91,26 @@ public class DetailActivity extends FragmentActivity {
         mImageView = findViewById(R.id.pictureView);
         etBirthday = findViewById(R.id.etBirthday);
         updateBtn = findViewById(R.id.btnUPDATE);
+    }
+
+    private void getCurrentFriendImage() {
+        try
+        {
+            Bitmap bit = BitmapFactory.decodeFile(currentFriend.getM_img());
+            if(bit != null) {
+                mImageView.setImageBitmap(bit);
+            }
+            else
+            {
+                Log.d(TAG, "Bitmap: is 0 ");
+                mImageView.setImageResource(R.drawable.cake);
+            }
+        }
+        catch(Exception ex)
+        {
+            Log.d(TAG, "file can convertes: ");
+            mImageView.setImageResource(R.drawable.cake);
+        }
     }
 
     private void setGUI() {
@@ -393,5 +419,9 @@ public class DetailActivity extends FragmentActivity {
 
     public void goToURL(View view) {
         openWebURL(currentFriend.getM_webSite().toString());
+    }
+
+    public void updateCurrentContact(View view) {
+        updateView();
     }
 }
