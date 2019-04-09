@@ -4,6 +4,8 @@
     <string name="deleteEverything">Remove all contacts</string>
     <string name="remove">Remove</string>
     <string name="app_name">FriendsCompolsury</string>
+    <string name="save_location">Save Location</string>
+    <string name="show_map">Show Map</string>
     <string name="getPerson">Get Person</string>
     <string name="addPerson">Add Person</string>
     <string name="Detail">Details</string>
