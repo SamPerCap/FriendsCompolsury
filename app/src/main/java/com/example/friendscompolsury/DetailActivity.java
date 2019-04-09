@@ -59,7 +59,14 @@ public class DetailActivity extends FragmentActivity {
         Log.d(TAG,"current friend" + currentFriend);
     }
 
-    private void updateView() {
+    /* When update button is clicked it will save all the changes to the
+        DataAccessFactory class
+     */
+
+    private void updateView()
+    {
+        // Goes to DataAccessFactory and in to a method that
+        // updates the contact by getting the changes that have been made to each textfield
         _dataAccess.updateContact(
                 new BEFriend(getIntent().getLongExtra("friend",0),
                         etName.getText().toString(),
@@ -70,9 +77,13 @@ public class DetailActivity extends FragmentActivity {
                         etBirthday.getText().toString(), 0, 0,
                         mImageView.getTransitionName())
         );
+        // When done, go to main activity, user should see the changes
         startActivity(new Intent(DetailActivity.this, MainActivity.class));
     }
-    private void showFileChooser() {
+
+    private void showFileChooser()
+    {
+        // Open the file chooser where user can find an image
         Intent i = new Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
@@ -119,7 +130,7 @@ public class DetailActivity extends FragmentActivity {
         } else {
             currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
-
+                getCurrentFriendImage();
                 etName.setText(currentFriend.getM_name());
                 etEmail.setText(currentFriend.getM_email());
                 etPhone.setText(currentFriend.getM_phone());
@@ -226,10 +237,10 @@ public class DetailActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-            //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
+        {
             Bundle b = data.getExtras();
 
             mImageBitmap = (Bitmap) b.get("data");
@@ -242,17 +253,8 @@ public class DetailActivity extends FragmentActivity {
             // Get the path
             //String  path = null;
             String path = FileChooser.mf_szGetRealPathFromURI(this, uri);
-                /*try {
-                    path = FileUtils.getPath(this, uri);
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                    Log.e(TAG,"path: " + e);
-                }*/
 
             Log.d(TAG, "File Path: " + path);
-            // Get the file instance
-            //File file = new File(path);
-            // Initiate the upload
             Log.d(TAG, "Get the file path: " + path );
 
             mImageView.setImageBitmap(BitmapFactory.decodeFile(path));
@@ -320,14 +322,15 @@ public class DetailActivity extends FragmentActivity {
 
     public void currentLocation()
     {
-        try {
+        try
+        {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-
+                    == PackageManager.PERMISSION_GRANTED)
+            {
                 LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
                 Criteria criteria = new Criteria();
 
-                //Location location = locationManager.getLastKnownLocation(provider);
                 String provider = locationManager.getBestProvider(criteria,false);
 
                 if ( provider == null ) {
@@ -353,10 +356,10 @@ public class DetailActivity extends FragmentActivity {
     private void takePicture()
     {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-
+        if (cameraIntent.resolveActivity(getPackageManager()) != null)
+        {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
+            {
                 if (checkSelfPermission(Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_DENIED) {
 
@@ -366,20 +369,26 @@ public class DetailActivity extends FragmentActivity {
                     requestPermissions(permissions, PERMISSION_REQUEST_CODE);
                 }
             }
-            //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
-    public void goToCamera(View view) {
+    public void goToCamera(View view)
+    {
         Log.e(TAG, "What happens?");
         final String[] options = {"Select image", "Take new image"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick a color");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
+        builder.setItems(options, new DialogInterface.OnClickListener()
+        {
+            /*
+            * Give the user an option to either choose an image that already exists on the phone
+            * or to take a picture
+            * */
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 if(options[which].equals(options[0]))
                 {
                     showFileChooser();
