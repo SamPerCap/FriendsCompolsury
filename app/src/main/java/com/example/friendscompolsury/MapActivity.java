@@ -117,8 +117,7 @@ public class MapActivity extends FragmentActivity  implements
     private void zoomToCurrentLocation()
     {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED)
+                == PackageManager.PERMISSION_GRANTED )
         {
             LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
             Criteria criteria = new Criteria();
@@ -132,11 +131,11 @@ public class MapActivity extends FragmentActivity  implements
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                        .zoom(17)                   // Sets the zoom
+                        .zoom(10)                   // Sets the zoom
                         .bearing(90)                // Sets the orientation of the camera to east
                         .tilt(40)                   // Sets the tilt of the camera to 30 degrees
                         .build();                   // Creates a CameraPosition from the builder
-                m_map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                m_map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         }
     }

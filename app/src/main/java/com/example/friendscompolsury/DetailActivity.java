@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -38,11 +42,10 @@ public class DetailActivity extends FragmentActivity {
     EditText etName, etPhone, etEmail, etAddress, etURL, etBirthday;
     ImageView mImageView;
     GoogleMap m_map;
-    BEFriend f;
     Button updateBtn;
+    BEFriend currentFriend;
 
     private Bitmap mImageBitmap;
-    private static final int FILE_SELECT_CODE = 0;
     private static final int READ_REQUEST_CODE = 42;
 
     @Override
@@ -54,13 +57,15 @@ public class DetailActivity extends FragmentActivity {
         setGUI();
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 _dataAccess.updateContact(new BEFriend(getIntent().getLongExtra("friend",0), etName.getText().toString(), etAddress.getText().toString(),
                         etPhone.getText().toString(), etEmail.getText().toString(), etURL.getText().toString(),
                         etBirthday.getText().toString(), 0, 0, mImageView.getTransitionName()));
                 startActivity(new Intent(DetailActivity.this, MainActivity.class));
             }
         });
+        Log.d(TAG,"current friend" + currentFriend);
     }
 
     private void showFileChooser() {
@@ -88,19 +93,19 @@ public class DetailActivity extends FragmentActivity {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            BEFriend person = _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
-                Log.d(TAG, "setGUI: " + person.toString());
+            currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
+                Log.d(TAG, "setGUI: " + currentFriend.toString());
 
-                etName.setText(person.getM_name());
-                etEmail.setText(person.getM_email());
-                etPhone.setText(person.getM_phone());
-                etAddress.setText(person.getM_address());
-                etBirthday.setText(person.getM_birthday());
-                etURL.setText(person.getM_webSite());
+                etName.setText(currentFriend.getM_name());
+                etEmail.setText(currentFriend.getM_email());
+                etPhone.setText(currentFriend.getM_phone());
+                etAddress.setText(currentFriend.getM_address());
+                etBirthday.setText(currentFriend.getM_birthday());
+                etURL.setText(currentFriend.getM_webSite());
                 try {
-                    mImageView.setImageBitmap(BitmapFactory.decodeFile(person.getM_img()));
+                    mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
                 } catch (Exception ex) {
-                    Log.d(TAG, "Can't parse this to image: " + person.getM_img());
+                    Log.d(TAG, "Can't parse this to image: " + currentFriend.getM_img());
                     Log.d(TAG, "" + ex);
                 }
             }
@@ -289,31 +294,25 @@ public class DetailActivity extends FragmentActivity {
 
     }
 
-    public void getLocation(View view) {
-        /*Log.d(TAG, "Detail activity will be started");
-        f = (BEFriend) getIntent().getSerializableExtra("friend");
-        Intent x = new Intent(this, MapActivity.class);
-        addData(x, f);
-        startActivity(x);
-        Log.d(TAG, "Detail activity is started");*/
+    public void currentLocation()
+    {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        try{
-            if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M ) {
-                if ( ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_DOCUMENTS)
-                        == PackageManager.PERMISSION_DENIED ) {
-                    String[] permissions = {Manifest.permission.MANAGE_DOCUMENTS};
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
+            Criteria criteria = new Criteria();
 
-                else {
-                    Toast.makeText(this, "Permission failed: " +  PackageManager.PERMISSION_DENIED, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }catch(Exception e) {
-            Log.e(TAG, "FileChooser error: " + e);
+            String provider = service.getBestProvider(criteria, false);
+
+            Location location = service.getLastKnownLocation(provider);
+
+            LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            
+            currentFriend.setM_location(location.getLatitude(), location.getLongitude());
+
+            Toast.makeText(this, "Location saved: " + userLocation, Toast.LENGTH_LONG).show();
         }
     }
-
     private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
@@ -359,5 +358,24 @@ public class DetailActivity extends FragmentActivity {
             }
         });
         builder.show();
+    }
+
+    public void showMap(View view) {
+        Intent x = new Intent(this, MapActivity.class);
+        addData(x, currentFriend);
+        Log.d(TAG, "Detail activity will be started");
+        startActivity(x);
+        Log.d(TAG, "Detail activity is started");
+    }
+
+    public void saveLocation(View view) {
+        currentLocation();
+    }
+
+    public void goToURL(View view) {
+        String inURL = currentFriend.getM_webSite();
+        Intent browse = new Intent( Intent.ACTION_VIEW , Uri.parse( inURL ) );
+
+        startActivity( browse );
     }
 }
