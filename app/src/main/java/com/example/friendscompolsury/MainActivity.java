@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     FriendsAdaptor adapter;
     Intent adapterIntent;
-    int index;
-    Object selectedObject;
     AdapterView.AdapterContextMenuInfo menuInfo;
 
     @Override
@@ -153,12 +151,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void deleteContact(MenuItem item) {
-        index = list.getSelectedItemPosition();
-        selectedObject = list.getSelectedItem();
+        Log.d(TAG,"Removing contact choosen");
+        // We get the item we have focused on to open the context menu
         menuInfo = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-        index = menuInfo.position;
-        _dataAccess.removeByID(index+1);
+        // Through the adapter, we are asking the object that is on the position we have choosen
+        BEFriend itemFromList = (BEFriend) adapter.getItem(menuInfo.position);
+        // And we remove it from the list, after, refresh the adapter.
+        _dataAccess.removeByID(itemFromList.getM_id());
         adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
         list.setAdapter(adapter);
+        Log.d(TAG, "View has been refreshed");
     }
 }
