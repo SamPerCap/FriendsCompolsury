@@ -1,11 +1,13 @@
 package com.example.friendscompolsury;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Criteria;
@@ -49,7 +51,6 @@ public class DetailActivity extends FragmentActivity {
     GoogleMap m_map;
     Button updateBtn;
     BEFriend currentFriend;
-    String filePath;
 
     private Bitmap mImageBitmap;
     private static final int READ_REQUEST_CODE = 42;
@@ -70,18 +71,15 @@ public class DetailActivity extends FragmentActivity {
 
     private void updateView()
     {
+        currentFriend.setM_address(etAddress.getText().toString());
+        currentFriend.setM_birthday(etBirthday.getText().toString());
+        currentFriend.setM_email(etEmail.getText().toString());
+        currentFriend.setM_phone(etPhone.getText().toString());
+        currentFriend.setM_webSite(etURL.getText().toString());
+        currentFriend.setM_name(etName.getText().toString());
         // Goes to DataAccessFactory and in to a method that
         // updates the contact by getting the changes that have been made to each textfield
-        _dataAccess.updateContact(
-                new BEFriend(getIntent().getLongExtra("friend",0),
-                        etName.getText().toString(),
-                        etAddress.getText().toString(),
-                        etPhone.getText().toString(),
-                        etEmail.getText().toString(),
-                        etURL.getText().toString(),
-                        etBirthday.getText().toString(), 0, 0,
-                        mImageView.getTransitionName())
-        );
+        _dataAccess.updateContact(currentFriend);
         // When done, go to main activity, user should see the changes
         startActivity(new Intent(DetailActivity.this, MainActivity.class));
     }
@@ -134,6 +132,7 @@ public class DetailActivity extends FragmentActivity {
             Log.d(TAG, "The database is empty");
         } else {
             currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
+
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
                 getCurrentFriendImage();
                 etName.setText(currentFriend.getM_name());
@@ -219,26 +218,120 @@ public class DetailActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)
-        {
-            Bundle b = data.getExtras();
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
 
+            //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+            Bundle b = data.getExtras();
             mImageBitmap = (Bitmap) b.get("data");
             mImageView.setImageBitmap(mImageBitmap);
             saveFileInLocalFolder();
-        }
-        if (requestCode == READ_REQUEST_CODE && resultCode == RESULT_OK) {
-            // Get the Uri of the selected file
-            Uri uri = data.getData();
-            Log.d(TAG, "File Uri: " + uri.toString());
-            String path = FileChooser.mf_szGetRealPathFromURI(this, uri);
 
-            Log.d(TAG, "File Path: " + path);
-            Log.d(TAG, "Get the file path: " + path );
-
-            mImageView.setImageBitmap(BitmapFactory.decodeFile(path));
-            Log.i(TAG, "Uri: " + path);
         }
+
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.d(TAG, "Request: " + RESULT_OK);
+            // The document selected by the user won't be returned in the intent.
+            // Instead, a URI to that document will be contained in the return intent
+            // provided to this method as a parameter.
+            // Pull that URI using resultData.getData().
+
+            Uri uri = null;
+            if (data != null) {
+                uri = data.getData();
+                currentFriend.setM_img(mf_szGetRealPathFromURI(this,uri));
+                mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
+                Log.i(TAG, "Uri: " + currentFriend.getM_img());
+                // showImage(uri);
+            }
+        }
+    }
+    public String mf_szGetRealPathFromURI(final Context context, final Uri ac_Uri )
+    {
+        String result = "";
+        boolean isok = false;
+
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(ac_Uri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            result = cursor.getString(column_index);
+            isok = true;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return isok ? result : "";
+    }
+    private void saveFileInLocalFolder() {
+        FileOutputStream outputPhoto = null;
+        try {
+            File f = getOutputMediaFile();
+            outputPhoto = new FileOutputStream(f);
+            mImageBitmap
+                    .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
+            Log.d(TAG, "Photo taken - size: " + f.length() );
+            Log.d(TAG, "     Location: " + f.getAbsolutePath());
+            currentFriend.setM_img(f.getAbsolutePath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (outputPhoto != null) {
+                    outputPhoto.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private File getOutputMediaFile(){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+
+
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+
+                Log.d(TAG, "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
+                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
+        }
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), getResources().getString(R.string.app_name));
+
+            // Create the storage directory if it does not exist
+            if (!mediaStorageDir.exists()) {
+                if (!mediaStorageDir.mkdirs()) {
+                    Log.d(TAG, "failed to create directory");
+                    return null;
+                }
+            }
+
+            // Create a media file name
+            String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
+            String postfix = "jpg";
+            String prefix = "IMG";
+
+            File mediaFile = new File(mediaStorageDir.getPath() +
+                    File.separator + prefix +
+                    "_" + timeStamp + "." + postfix);
+
+            return mediaFile;
+
+        }
+        Log.d(TAG, "Permission for writing NOT granted");
+        return null;
     }
 
     public void callButton(View view) {
@@ -296,6 +389,7 @@ public class DetailActivity extends FragmentActivity {
             String text = "Hi, it goes well on the android course...";
             m.sendTextMessage(etPhone.getText().toString(), null, text, null, null);
         }
+
 
     }
 
@@ -418,72 +512,4 @@ public class DetailActivity extends FragmentActivity {
         updateView();
     }
 
-    private void saveFileInLocalFolder() {
-        FileOutputStream outputPhoto = null;
-
-        try {
-            File f = getOutputMediaFile();
-            outputPhoto = new FileOutputStream(f);
-            mImageBitmap
-                    .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
-            Log.d(TAG, "Photo taken - size: " + f.length() );
-            Log.d(TAG, "     Location: " + f.getAbsolutePath());
-            filePath = f.getAbsolutePath();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (outputPhoto != null) {
-                    outputPhoto.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private File getOutputMediaFile(){
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-
-
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-
-                Log.d(TAG, "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), getResources().getString(R.string.app_name));
-
-            // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists()) {
-                if (!mediaStorageDir.mkdirs()) {
-                    Log.d(TAG, "failed to create directory");
-                    return null;
-                }
-            }
-
-            // Create a media file name
-            String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-            String postfix = "jpg";
-            String prefix = "IMG";
-
-            File mediaFile = new File(mediaStorageDir.getPath() +
-                    File.separator + prefix +
-                    "_" + timeStamp + "." + postfix);
-
-            return mediaFile;
-        }
-        Log.d(TAG, "Permission for writing NOT granted");
-        return null;
-    }
 }
