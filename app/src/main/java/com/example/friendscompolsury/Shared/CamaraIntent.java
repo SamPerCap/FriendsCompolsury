@@ -16,7 +16,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.friendscompolsury.AddContactActivity;
+import com.example.friendscompolsury.DataAccessFactory;
+import com.example.friendscompolsury.DetailActivity;
 import com.example.friendscompolsury.MainActivity;
+import com.example.friendscompolsury.Model.BEFriend;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +32,11 @@ import dk.easv.friendsv2.R;
 public class CamaraIntent extends AppCompatActivity {
     String TAG = MainActivity.TAG;
     String messageToCamara = "activityClass";
+    String DetailActivity = "detailactivity";
+    DataAccessFactory _dataAccess = MainActivity._dataAccess;
     String addContactName = "addcontactactivity";
+    String BEFriendKey = "selectedFriend";
+    String messageToDetail ="friend";
     private static final int PERMISSION_REQUEST_CODE = 1;
     Bitmap image;
     String filePath;
@@ -71,11 +78,22 @@ public class CamaraIntent extends AppCompatActivity {
             String activity = intent.getStringExtra(messageToCamara);
             Log.d(TAG, "onActivityResult:1 "+ activity.toLowerCase());
            if(activity.toLowerCase().equals(addContactName)) {
-               Log.d(TAG, " go to AddContactActivity: ");
+               Log.d(TAG, " go to: " + addContactName);
                Intent camaraintent = new Intent(this, AddContactActivity.class);
                camaraintent.putExtra(messageToCamara,filePath);
                startActivity(camaraintent);
            }
+          else  if(activity.toLowerCase().equals(DetailActivity)) {
+                Log.d(TAG, " go to: " + DetailActivity);
+                Intent camaraintent = new Intent(this, DetailActivity.class);
+
+                BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
+
+                camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
+                camaraintent.putExtra(messageToCamara,filePath);
+
+                startActivity(camaraintent);
+            }
         }
     }
     private void saveFileInLocalFolder() {

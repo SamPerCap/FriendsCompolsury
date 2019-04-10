@@ -35,7 +35,7 @@ public class DataAccessFactory {
         return friendsList;
     }
 
-    protected BEFriend getFriendByID(long ID){
+    public BEFriend getFriendByID(long ID){
         return mInstance.getPersonById(ID);
     }
     protected void deleteEverything(){
@@ -51,7 +51,7 @@ public class DataAccessFactory {
         friendsList.clear();
     }
 
-    protected void updateContact(BEFriend contactInfo) {
+    public void updateContact(BEFriend contactInfo) {
         BEFriend personToUpdate = contactInfo;
         mInstance.updatePerson(personToUpdate);
         getFriendsList();

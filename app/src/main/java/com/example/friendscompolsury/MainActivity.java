@@ -50,11 +50,13 @@ public class MainActivity extends AppCompatActivity {
 
         SettingAdapter();
         registerForContextMenu(list);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 // TODO Auto-generated method stub
+
                 adapterIntent = new Intent(context, DetailActivity.class);
                 Log.d(TAG, "Detail activity will be started");
                 addData(adapterIntent, _dataAccess.getFriendsList().get(position));

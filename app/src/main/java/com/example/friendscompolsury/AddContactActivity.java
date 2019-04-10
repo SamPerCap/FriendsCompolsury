@@ -74,23 +74,22 @@ public class AddContactActivity extends Activity {
         etSavePhone = findViewById(R.id.etSPhone);
         etSaveBirthday = findViewById(R.id.etSBirthday);
         _pictureView = findViewById(R.id.pictureView);
-        try{
-            Intent intent = getIntent();
-             filePath = intent.getStringExtra(messageToCamara);
-            if(filePath!=null)
-            {
+
+            try {
+                Intent intent = getIntent();
+                filePath = intent.getStringExtra(messageToCamara);
+                if (filePath != null) {
                     Bitmap bit = BitmapFactory.decodeFile(filePath);
-                    if(bit != null) {
+                    if (bit != null) {
                         _pictureView.setImageBitmap(bit);
                     }
 
 
+                }
+            } catch (Exception ex) {
+                Log.d(TAG, "locateItems: images " + ex);
             }
-        }
-        catch(Exception ex)
-        {
-            Log.d(TAG, "locateItems: images " +ex);
-        }
+
 
     }
 
@@ -135,7 +134,7 @@ public class AddContactActivity extends Activity {
 
 
                     camaraintent = new Intent(context, CamaraIntent.class);
-                   camaraintent.putExtra(messageToCamara,className);
+                    camaraintent.putExtra(messageToCamara,className);
                     startActivity(camaraintent);
                 }
             }

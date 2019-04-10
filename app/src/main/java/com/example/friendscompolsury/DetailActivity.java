@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
+import com.example.friendscompolsury.Shared.CamaraIntent;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -41,7 +42,8 @@ import java.util.Date;
 import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
-
+    String className  ="DetailActivity";
+    String messageToCamara = "activityClass";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
@@ -51,6 +53,9 @@ public class DetailActivity extends FragmentActivity {
     GoogleMap m_map;
     Button updateBtn;
     BEFriend currentFriend;
+    Context context;
+    String filePath;
+    String BEFriendKey = "selectedFriend";
 
     private Bitmap mImageBitmap;
     private static final int READ_REQUEST_CODE = 42;
@@ -63,6 +68,7 @@ public class DetailActivity extends FragmentActivity {
         LocateItems();
         setGUI();
         Log.d(TAG,"current friend" + currentFriend);
+        context= this;
     }
 
     /* When update button is clicked it will save all the changes to the
@@ -110,22 +116,33 @@ public class DetailActivity extends FragmentActivity {
     private void getCurrentFriendImage() {
         try
         {
-            Bitmap bit = BitmapFactory.decodeFile(currentFriend.getM_img());
-            if(bit != null) {
-                mImageView.setImageBitmap(bit);
+            Intent intent = getIntent();
+           filePath = intent.getStringExtra(messageToCamara);
+            if(filePath == null ) {
+                Bitmap bit = BitmapFactory.decodeFile(currentFriend.getM_img());
+                if (bit != null) {
+                    mImageView.setImageBitmap(bit);
+                } else {
+                    Log.d(TAG, "Bitmap: is 0 ");
+                    mImageView.setImageResource(R.drawable.cake);
+                }
             }
             else
             {
-                Log.d(TAG, "Bitmap: is 0 ");
-                mImageView.setImageResource(R.drawable.cake);
+                Log.d(TAG, "camara changes the image: " + filePath);
+                Bitmap bit = BitmapFactory.decodeFile(filePath);
+                if (bit != null) {
+                    mImageView.setImageBitmap(bit);
+                }
             }
         }
         catch(Exception ex)
         {
             Log.d(TAG, "file can convertes: ");
             mImageView.setImageResource(R.drawable.cake);
-        }
-    }
+        }}
+
+
 
     private void setGUI() {
         if (_dataAccess.getFriendsList().size() <= 0) {
@@ -218,16 +235,7 @@ public class DetailActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-
-            //mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
-            Bundle b = data.getExtras();
-            mImageBitmap = (Bitmap) b.get("data");
-            mImageView.setImageBitmap(mImageBitmap);
-            saveFileInLocalFolder();
-
-        }
-
+      
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "Request: " + RESULT_OK);
             // The document selected by the user won't be returned in the intent.
@@ -266,73 +274,8 @@ public class DetailActivity extends FragmentActivity {
 
         return isok ? result : "";
     }
-    private void saveFileInLocalFolder() {
-        FileOutputStream outputPhoto = null;
-        try {
-            File f = getOutputMediaFile();
-            outputPhoto = new FileOutputStream(f);
-            mImageBitmap
-                    .compress(Bitmap.CompressFormat.PNG, 100, outputPhoto);
-            Log.d(TAG, "Photo taken - size: " + f.length() );
-            Log.d(TAG, "     Location: " + f.getAbsolutePath());
-            currentFriend.setM_img(f.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (outputPhoto != null) {
-                    outputPhoto.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    private File getOutputMediaFile(){
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
 
 
-            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-
-                Log.d(TAG, "permission denied to WRITE_EXTERNAL_STORAGE - requesting it");
-                String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), getResources().getString(R.string.app_name));
-
-            // Create the storage directory if it does not exist
-            if (!mediaStorageDir.exists()) {
-                if (!mediaStorageDir.mkdirs()) {
-                    Log.d(TAG, "failed to create directory");
-                    return null;
-                }
-            }
-
-            // Create a media file name
-            String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmmss").format(new Date());
-            String postfix = "jpg";
-            String prefix = "IMG";
-
-            File mediaFile = new File(mediaStorageDir.getPath() +
-                    File.separator + prefix +
-                    "_" + timeStamp + "." + postfix);
-
-            return mediaFile;
-
-        }
-        Log.d(TAG, "Permission for writing NOT granted");
-        return null;
-    }
 
     public void callButton(View view) {
 
@@ -426,25 +369,7 @@ public class DetailActivity extends FragmentActivity {
         x.putExtra("friend", f);
     }
 
-    private void takePicture()
-    {
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(getPackageManager()) != null)
-        {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M)
-            {
-                if (checkSelfPermission(Manifest.permission.CAMERA)
-                        == PackageManager.PERMISSION_DENIED) {
 
-                    Log.d(TAG, "permission denied to CAMERA - requesting it");
-                    String[] permissions = {Manifest.permission.CAMERA};
-
-                    requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-                }
-            }
-            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
 
     public void goToCamera(View view)
     {
@@ -468,7 +393,10 @@ public class DetailActivity extends FragmentActivity {
                 }
                 if(options[which].equals(options[1]))
                 {
-                    takePicture();
+                    Intent  camaraintent = new Intent(context, CamaraIntent.class);
+                    camaraintent.putExtra(messageToCamara,className);
+                    camaraintent.putExtra(BEFriendKey,currentFriend.m_id);
+                    startActivity(camaraintent);
                 }
             }
         });
