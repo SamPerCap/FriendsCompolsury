@@ -82,6 +82,23 @@ public class SQLiteImplementation implements IDataCRUD {
     }
 
     @Override
+    public BEFriend getPersonByName(BEFriend p) {
+        Log.d(MainActivity.TAG,"Getting a person by Name " + p.getM_name());
+        String selectQuery = "SELECT  * FROM " + TABLE_NAME + " WHERE name = ?";
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{"" + p.getM_name()});
+        if (cursor.moveToFirst()) {
+            //For each column it will take a value.
+            return new BEFriend(cursor.getLong(0), cursor.getString(1),
+                    cursor.getString(2), cursor.getString(3), cursor.getString(4),
+                    cursor.getString(5), cursor.getString(6), cursor.getFloat(7),
+                    cursor.getFloat(8), cursor.getString(9));
+        }
+        else
+        {return null;
+        }
+    }
+
+    @Override
     public List<BEFriend> getAllPersons() {
         Log.d(MainActivity.TAG, "Getting all persons");
         List<BEFriend> list = new ArrayList<BEFriend>();
@@ -119,6 +136,7 @@ public class SQLiteImplementation implements IDataCRUD {
         }
         throw new IllegalArgumentException("Could not get Person by Id " + id);
     }
+
 
     private static class OpenHelper extends SQLiteOpenHelper {
 

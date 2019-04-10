@@ -34,6 +34,10 @@ public class DataAccessFactory {
         }
         return friendsList;
     }
+    public BEFriend getFriendByName(BEFriend p) {
+
+        return mInstance.getPersonByName(p);
+    }
 
     public BEFriend getFriendByID(long ID){
         return mInstance.getPersonById(ID);

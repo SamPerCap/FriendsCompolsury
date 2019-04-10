@@ -175,7 +175,9 @@ public class MainActivity extends AppCompatActivity {
                     bfriend.setM_phone(info.mobileNumber);
                     bfriend.setM_email(info.email);
                     //bfriend.setM_img(info.photo.toString());
-                    _dataAccess.addContact(bfriend);
+                    if(_dataAccess.getFriendByName(bfriend)==null) {
+                        _dataAccess.addContact(bfriend);
+                    }
                     cur1.close();
                     cursorInfo.close();
                 }

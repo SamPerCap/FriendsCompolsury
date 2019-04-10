@@ -10,6 +10,7 @@ public interface IDataCRUD {
     void deleteAll();
     void deleteById(long id);
     void updatePerson(BEFriend p);
+    BEFriend getPersonByName(BEFriend p);
     List<BEFriend> getAllPersons();
     BEFriend getPersonById(long id);
 
