@@ -38,13 +38,14 @@ public class CamaraIntent extends AppCompatActivity {
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
     String addContactName = "addcontactactivity";
     String BEFriendKey = "selectedFriend";
-    String messageToDetail ="friend";
+    String friendIdKey ="friend";
     private static final int PERMISSION_REQUEST_CODE = 1;
     Bitmap image;
     String filePath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        friendIdKey = getString(R.string.friendKey);
         messageToCamara = getString(R.string.activityClass);
         image();
     }
@@ -105,7 +106,7 @@ public class CamaraIntent extends AppCompatActivity {
 
             BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
 
-            camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
+            camaraintent.putExtra(friendIdKey,currentFriendId.m_id);
             camaraintent.putExtra(messageToCamara,filePath);
 
             startActivity(camaraintent);

@@ -30,12 +30,13 @@ public class FileChoserIntent extends AppCompatActivity {
     String DetailActivity = "detailactivity";
     String addContactName = "addcontactactivity";
     String BEFriendKey = "selectedFriend";
-    String messageToDetail ="friend";
+    String friendIdKey ;
     String filePath;
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        friendIdKey = getString(R.string.friendKey);
         messageToCamara = getString(R.string.activityClass);
         performFileSearch();
     }
@@ -82,7 +83,7 @@ public void changeActivity()
 
         BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
 
-        camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
+        camaraintent.putExtra(friendIdKey,currentFriendId.m_id);
         camaraintent.putExtra(messageToCamara,filePath);
 
         startActivity(camaraintent);

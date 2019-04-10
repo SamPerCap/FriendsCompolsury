@@ -43,6 +43,7 @@ import java.util.Date;
 import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
+    String friendIdKey;
     String className  ="DetailActivity";
     String messageToCamara ;
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -151,7 +152,8 @@ public class DetailActivity extends FragmentActivity {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
+            friendIdKey = getString(R.string.friendKey);
+            currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra(friendIdKey,0));
 
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
                 getCurrentFriendImage();

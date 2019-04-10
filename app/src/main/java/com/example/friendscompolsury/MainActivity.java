@@ -28,6 +28,7 @@ import dk.easv.friendsv2.R;
 public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static String TAG = "Friend2";
+    String friendIdKey;
     public static DataAccessFactory _dataAccess;
     ListView list;
     FloatingActionButton addContactButton;
@@ -117,8 +118,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addData(Intent x, BEFriend f) {
+        friendIdKey = getString(R.string.friendKey);
         Log.d(TAG, "adding Data to details");
-        x.putExtra("friend", f.getM_id());
+        x.putExtra(friendIdKey, f.getM_id());
     }
 
     @Override
