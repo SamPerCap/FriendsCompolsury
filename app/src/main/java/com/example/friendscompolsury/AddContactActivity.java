@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
 import com.example.friendscompolsury.Shared.CamaraIntent;
+import com.example.friendscompolsury.Shared.FileChoserIntent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +47,7 @@ public class AddContactActivity extends Activity {
     Bitmap mImageBitmap;
     String filePath;
     Context context;
-    Intent camaraintent;
+    Intent ImageIntent;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,15 +128,17 @@ public class AddContactActivity extends Activity {
             public void onClick(DialogInterface dialog, int which) {
                 if(options[which].equals(options[0]))
                 {
-                    performFileSearch();
+                    ImageIntent = new Intent(context, FileChoserIntent.class);
+                    ImageIntent.putExtra(messageToCamara,className);
+                    startActivity(ImageIntent);
                 }
                 if(options[which].equals(options[1]))
                 {
 
 
-                    camaraintent = new Intent(context, CamaraIntent.class);
-                    camaraintent.putExtra(messageToCamara,className);
-                    startActivity(camaraintent);
+                    ImageIntent = new Intent(context, CamaraIntent.class);
+                    ImageIntent.putExtra(messageToCamara,className);
+                    startActivity(ImageIntent);
                 }
             }
         });
@@ -145,60 +148,10 @@ public class AddContactActivity extends Activity {
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Request: " + RESULT_OK);
-            // The document selected by the user won't be returned in the intent.
-            // Instead, a URI to that document will be contained in the return intent
-            // provided to this method as a parameter.
-            // Pull that URI using resultData.getData().
-
-            Uri uri = null;
-            if (data != null) {
-                uri = data.getData();
-                filePath = mf_szGetRealPathFromURI(this,uri);
-                _pictureView.setImageBitmap(BitmapFactory.decodeFile(filePath));
-                Log.i(TAG, "Uri: " + filePath);
-                // showImage(uri);
-            }
-        }
-    }
 
 
-    private static final int READ_REQUEST_CODE = 42;
-    /**
-     * Fires an intent to spin up the "file chooser" UI and select an image.
-     */
-    public void performFileSearch() {
 
-        Intent i = new Intent(
-                Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        );
-        startActivityForResult(i, 42);
-    }
-    public String mf_szGetRealPathFromURI(final Context context, final Uri ac_Uri )
-    {
-        String result = "";
-        boolean isok = false;
 
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(ac_Uri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            result = cursor.getString(column_index);
-            isok = true;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
 
-        return isok ? result : "";
-    }
 
 }

@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.friendscompolsury.Model.BEFriend;
 import com.example.friendscompolsury.Shared.CamaraIntent;
+import com.example.friendscompolsury.Shared.FileChoserIntent;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -129,6 +130,7 @@ public class DetailActivity extends FragmentActivity {
             }
             else
             {
+                currentFriend.setM_img(filePath);
                 Log.d(TAG, "camara changes the image: " + filePath);
                 Bitmap bit = BitmapFactory.decodeFile(filePath);
                 if (bit != null) {
@@ -230,49 +232,6 @@ public class DetailActivity extends FragmentActivity {
         emailIntent.putExtra(Intent.EXTRA_TEXT,
                 "This is a test mail");
         startActivity(emailIntent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-      
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "Request: " + RESULT_OK);
-            // The document selected by the user won't be returned in the intent.
-            // Instead, a URI to that document will be contained in the return intent
-            // provided to this method as a parameter.
-            // Pull that URI using resultData.getData().
-
-            Uri uri = null;
-            if (data != null) {
-                uri = data.getData();
-                currentFriend.setM_img(mf_szGetRealPathFromURI(this,uri));
-                mImageView.setImageBitmap(BitmapFactory.decodeFile(currentFriend.getM_img()));
-                Log.i(TAG, "Uri: " + currentFriend.getM_img());
-                // showImage(uri);
-            }
-        }
-    }
-    public String mf_szGetRealPathFromURI(final Context context, final Uri ac_Uri )
-    {
-        String result = "";
-        boolean isok = false;
-
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(ac_Uri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            result = cursor.getString(column_index);
-            isok = true;
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-
-        return isok ? result : "";
     }
 
 
@@ -389,7 +348,10 @@ public class DetailActivity extends FragmentActivity {
             {
                 if(options[which].equals(options[0]))
                 {
-                    showFileChooser();
+                    Intent  fileintent = new Intent(context, FileChoserIntent.class);
+                    fileintent.putExtra(messageToCamara,className);
+                    fileintent.putExtra(BEFriendKey,currentFriend.m_id);
+                    startActivity(fileintent);
                 }
                 if(options[which].equals(options[1]))
                 {

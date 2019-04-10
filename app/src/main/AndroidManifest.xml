@@ -30,8 +30,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.friendscompolsury.Shared.CamaraIntent"
+            android:name="com.example.friendscompolsury.Shared.FileChoserIntent"
+            android:label="@string/title_activity_file_choser_intent"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name="com.example.friendscompolsury.Shared.CamaraIntent"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name="com.example.friendscompolsury.MapActivity" />
         <activity
             android:name="com.example.friendscompolsury.MainActivity"
