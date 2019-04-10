@@ -11,5 +11,10 @@
         android:onClick="deleteEverything"
         android:title="@string/deleteEverything"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/synchronizeContacts"
+        android:onClick="synchronizeWithContacts"
+        android:title="@string/synchronizeContacts"
+        app:showAsAction="never"/>
 
 </menu>

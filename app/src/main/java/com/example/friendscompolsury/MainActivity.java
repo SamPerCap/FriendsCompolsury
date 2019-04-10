@@ -26,8 +26,6 @@ import android.widget.ListView;
 import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.example.friendscompolsury.Model.Comparator.CompareSort;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         SettingAdapter();
         registerForContextMenu(list);
-        getContacts(context);
+
         //getContactList();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -128,48 +126,6 @@ public class MainActivity extends AppCompatActivity {
     private void SettingAdapter() {
         adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
         list.setAdapter(adapter);
-    }
-
-    public static Bitmap retrieveContactPhoto(Context context, String number) {
-        ContentResolver contentResolver = context.getContentResolver();
-        String contactId = null;
-        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
-
-        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
-
-        Cursor cursor =
-                contentResolver.query(
-                        uri,
-                        projection,
-                        null,
-                        null,
-                        null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
-            }
-            cursor.close();
-        }
-
-        Bitmap photo = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.jacob);
-
-        try {
-            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
-                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
-
-            if (inputStream != null) {
-                photo = BitmapFactory.decodeStream(inputStream);
-            }
-
-            assert inputStream != null;
-            inputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return photo;
     }
 
     public List<ContactModel> getContacts(Context ctx) {
@@ -275,5 +231,11 @@ public class MainActivity extends AppCompatActivity {
         adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
         list.setAdapter(adapter);
         Log.d(TAG, "View has been refreshed");
+    }
+
+    public void synchronizeWithContacts(MenuItem item)
+    {
+        getContacts(context);
+        SettingAdapter();
     }
 }

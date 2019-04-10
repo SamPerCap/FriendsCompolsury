@@ -23,4 +23,5 @@
     <string name="Address">Address</string>
     <string name="Birthday">Birthday</string>
     <string name="activityClass">activityClass</string>
+    <string name="synchronizeContacts">Synchronize Contracts</string>
 </resources>
