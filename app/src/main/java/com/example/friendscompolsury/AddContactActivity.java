@@ -94,12 +94,9 @@ public class AddContactActivity extends Activity {
 
     private void saveContactInDatabase() {
 
-        if(!etSaveAddress.getText().equals(null)
-        && !etSaveName.getText().equals(null)
-        && !etSaveBirthday.getText().equals(null)
-        && !etSaveEmail.getText().equals(null)
-        && !etSavePhone.getText().equals(null)
-        && !etSaveURL.getText().equals(null)) {
+        if(!etSaveName.getText().toString().isEmpty()
+                && !etSavePhone.getText().toString().isEmpty())
+        {
             Log.d(TAG, "Saving a new contact into the database");
             //String m_name, String m_address, String m_phone, String m_email,
             //String m_webSite, String m_birthday, double m_location_x,
@@ -111,7 +108,7 @@ public class AddContactActivity extends Activity {
         }
         else
         {
-            Toast.makeText(this, "Fill out every fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Needs to fill out name and number at least before saving.", Toast.LENGTH_SHORT).show();
         }
         startActivity(new Intent(AddContactActivity.this, MainActivity.class));
     }
@@ -145,11 +142,42 @@ public class AddContactActivity extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        Log.e(TAG, "What is the state of the current textfields: "
+                + etSaveAddress.getText()
+                + etSaveName.getText()
+                + etSaveURL.getText()
+                + etSaveBirthday.getText()
+                + etSaveEmail.getText()
+                + etSavePhone.getText());
 
-
-
-
-
-
-
+        if(!etSaveAddress.getText().toString().isEmpty()
+                || !etSaveName.getText().toString().isEmpty()
+                || !etSaveBirthday.getText().toString().isEmpty()
+                || !etSaveEmail.getText().toString().isEmpty()
+                || !etSavePhone.getText().toString().isEmpty()
+                || !etSaveURL.getText().toString().isEmpty())
+        {
+            // Here you want to show the user a dialog box
+            new AlertDialog.Builder(context)
+                    .setTitle("Going back to the main screen without saving the changes")
+                    .setMessage("Are you sure?")
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            // The user wants to leave - so dismiss the dialog and exit
+                            finish();
+                            dialog.dismiss();
+                        }
+                    }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // The user is not sure, so you can exit or just stay
+                    dialog.dismiss();
+                }
+            }).show();
+        }
+        else
+            finish();
+    }
 }
