@@ -1,10 +1,17 @@
 package com.example.friendscompolsury;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,8 +27,11 @@ import com.example.friendscompolsury.Adaptor.FriendsAdaptor;
 import com.example.friendscompolsury.Model.BEFriend;
 import com.example.friendscompolsury.Model.Comparator.CompareSort;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import dk.easv.friendsv2.R;
 
@@ -50,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
 
         SettingAdapter();
         registerForContextMenu(list);
-
+        getContacts(context);
+        //getContactList();
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -94,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
                     || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                     == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE)
+                    == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_CONTACTS)
                     == PackageManager.PERMISSION_DENIED) {
 
                 Log.d(TAG, "permission denied to CAMERA - requesting it");
@@ -105,7 +118,8 @@ public class MainActivity extends AppCompatActivity {
                         , Manifest.permission.INTERNET
                         , Manifest.permission.ACCESS_FINE_LOCATION
                         , Manifest.permission.ACCESS_COARSE_LOCATION
-                        , Manifest.permission.ACCESS_NETWORK_STATE};
+                        , Manifest.permission.ACCESS_NETWORK_STATE
+                        , Manifest.permission.READ_CONTACTS};
 
                 requestPermissions(permissions, PERMISSION_REQUEST_CODE);
             }
@@ -114,6 +128,104 @@ public class MainActivity extends AppCompatActivity {
     private void SettingAdapter() {
         adapter = new FriendsAdaptor(this, _dataAccess.getFriendsList());
         list.setAdapter(adapter);
+    }
+
+    public static Bitmap retrieveContactPhoto(Context context, String number) {
+        ContentResolver contentResolver = context.getContentResolver();
+        String contactId = null;
+        Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+
+        String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID};
+
+        Cursor cursor =
+                contentResolver.query(
+                        uri,
+                        projection,
+                        null,
+                        null,
+                        null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                contactId = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.PhoneLookup._ID));
+            }
+            cursor.close();
+        }
+
+        Bitmap photo = BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.jacob);
+
+        try {
+            InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(context.getContentResolver(),
+                    ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(contactId)));
+
+            if (inputStream != null) {
+                photo = BitmapFactory.decodeStream(inputStream);
+            }
+
+            assert inputStream != null;
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return photo;
+    }
+
+    public List<ContactModel> getContacts(Context ctx) {
+        List<ContactModel> list = new ArrayList<>();
+
+        ContentResolver contentResolver = ctx.getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                if (cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor cursorInfo = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                    Cursor cur1 = contentResolver.query(
+                            ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    InputStream inputStream = ContactsContract.Contacts.openContactPhotoInputStream(ctx.getContentResolver(),
+                            ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(id)));
+
+                    Uri person = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, new Long(id));
+                    Uri pURI = Uri.withAppendedPath(person, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+
+                    Bitmap photo = null;
+                    if (inputStream != null) {
+                        photo = BitmapFactory.decodeStream(inputStream);
+                    }
+                    ContactModel info = new ContactModel();
+                    while (cursorInfo.moveToNext()) {
+
+                        info.id = id;
+                        //info.email  = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                        info.name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        info.mobileNumber = cursorInfo.getString(cursorInfo.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        info.photo = photo;
+                        info.photoURI= pURI;
+                        list.add(info);
+                        Log.e(TAG,"name etc " + info.id + " " + info.name + " " + info.mobileNumber + " " + info.photoURI + " " + info.email);
+                    }
+                    while(cur1.moveToNext()) {
+                        info.email  = cur1.getString(cur1.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                    }
+                    Log.e(TAG,"name etc " + info.id + " " + info.name + " " + info.mobileNumber + " " + info.photoURI + " " + info.email);
+                    BEFriend bfriend = new BEFriend();
+                    bfriend.setM_name(info.name);
+                    bfriend.setM_phone(info.mobileNumber);
+                    bfriend.setM_email(info.email);
+                    //bfriend.setM_img(info.photo.toString());
+                    _dataAccess.addContact(bfriend);
+                    cur1.close();
+                    cursorInfo.close();
+                }
+            }
+            cursor.close();
+        }
+        return list;
     }
 
     private void addData(Intent x, BEFriend f) {
