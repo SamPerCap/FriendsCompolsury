@@ -26,7 +26,7 @@ import dk.easv.friendsv2.R;
 public class FileChoserIntent extends AppCompatActivity {
     private static final int READ_REQUEST_CODE = 42;
     String TAG = MainActivity.TAG;
-    String messageToCamara = "activityClass";
+    String messageToCamara ;
     String DetailActivity = "detailactivity";
     String addContactName = "addcontactactivity";
     String BEFriendKey = "selectedFriend";
@@ -36,6 +36,7 @@ public class FileChoserIntent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        messageToCamara = getString(R.string.activityClass);
         performFileSearch();
     }
     @Override

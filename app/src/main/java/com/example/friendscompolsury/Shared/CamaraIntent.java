@@ -31,7 +31,8 @@ import dk.easv.friendsv2.R;
 
 public class CamaraIntent extends AppCompatActivity {
     String TAG = MainActivity.TAG;
-    String messageToCamara = "activityClass";
+  //  String messageToCamara = "activityClass";
+    String messageToCamara;
     String DetailActivity = "detailactivity";
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
     String addContactName = "addcontactactivity";
@@ -43,7 +44,7 @@ public class CamaraIntent extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        messageToCamara = getString(R.string.activityClass);
         image();
     }
     public void image()

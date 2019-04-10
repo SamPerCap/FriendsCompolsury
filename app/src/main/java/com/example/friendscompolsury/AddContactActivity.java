@@ -36,15 +36,12 @@ import dk.easv.friendsv2.R;
 
 public class AddContactActivity extends Activity {
     String className  ="AddContactActivity";
-     String messageToCamara = "activityClass";
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int PERMISSION_REQUEST_CODE = 1;
+     String messageToCamara;
     private String TAG = MainActivity.TAG;
     private EditText etSaveName, etSaveEmail, etSaveAddress, etSavePhone, etSaveBirthday, etSaveURL;
     private Button saveContactButton;
     private DataAccessFactory _dataAccess = MainActivity._dataAccess;
     private ImageView _pictureView;
-    Bitmap mImageBitmap;
     String filePath;
     Context context;
     Intent ImageIntent;
@@ -52,6 +49,7 @@ public class AddContactActivity extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        messageToCamara = getString(R.string.activityClass);
         setContentView(R.layout.add_contact);
         Log.d(TAG, "Add contact Activity started");
         locateItems();

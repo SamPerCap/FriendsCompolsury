@@ -44,7 +44,7 @@ import dk.easv.friendsv2.R;
 
 public class DetailActivity extends FragmentActivity {
     String className  ="DetailActivity";
-    String messageToCamara = "activityClass";
+    String messageToCamara ;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     String TAG = MainActivity.TAG;
@@ -64,6 +64,7 @@ public class DetailActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        messageToCamara = getString(R.string.activityClass);
         setContentView(R.layout.activity_detail);
         Log.d(TAG, "Detail Activity started");
         LocateItems();
