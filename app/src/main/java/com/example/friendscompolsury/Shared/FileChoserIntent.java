@@ -55,31 +55,39 @@ public class FileChoserIntent extends AppCompatActivity {
                 filePath = mf_szGetRealPathFromURI(this,uri);
                 Log.i(TAG, "Uri: " + filePath);
                 // showImage(uri);
-                Intent intent = getIntent();
-                String activity = intent.getStringExtra(messageToCamara);
-                Log.d(TAG, "onActivityResult:1 "+ activity.toLowerCase());
-                if(activity.toLowerCase().equals(addContactName)) {
-                    Log.d(TAG, " go to: " + addContactName);
-                    Intent camaraintent = new Intent(this, AddContactActivity.class);
-                    camaraintent.putExtra(messageToCamara,filePath);
-                    startActivity(camaraintent);
-                }
-                else  if(activity.toLowerCase().equals(DetailActivity)) {
-                    Log.d(TAG, " go to: " + DetailActivity);
-                    Intent camaraintent = new Intent(this, DetailActivity.class);
 
-                    BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
-
-                    camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
-                    camaraintent.putExtra(messageToCamara,filePath);
-
-                    startActivity(camaraintent);
-                }
             }
+            changeActivity();
             }
-
+            else
+        {
+            finish();
         }
 
+        }
+public void changeActivity()
+{
+    Intent intent = getIntent();
+    String activity = intent.getStringExtra(messageToCamara);
+    Log.d(TAG, "onActivityResult:1 "+ activity.toLowerCase());
+    if(activity.toLowerCase().equals(addContactName)) {
+        Log.d(TAG, " go to: " + addContactName);
+        Intent camaraintent = new Intent(this, AddContactActivity.class);
+        camaraintent.putExtra(messageToCamara,filePath);
+        startActivity(camaraintent);
+    }
+    else  if(activity.toLowerCase().equals(DetailActivity)) {
+        Log.d(TAG, " go to: " + DetailActivity);
+        Intent camaraintent = new Intent(this, DetailActivity.class);
+
+        BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
+
+        camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
+        camaraintent.putExtra(messageToCamara,filePath);
+
+        startActivity(camaraintent);
+    }
+}
     /**
      * Fires an intent to spin up the "file chooser" UI and select an image.
      */

@@ -32,6 +32,7 @@ import dk.easv.friendsv2.R;
 public class CamaraIntent extends AppCompatActivity {
     String TAG = MainActivity.TAG;
   //  String messageToCamara = "activityClass";
+
     String messageToCamara;
     String DetailActivity = "detailactivity";
     DataAccessFactory _dataAccess = MainActivity._dataAccess;
@@ -47,6 +48,10 @@ public class CamaraIntent extends AppCompatActivity {
         messageToCamara = getString(R.string.activityClass);
         image();
     }
+
+
+
+
     public void image()
     {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -75,26 +80,35 @@ public class CamaraIntent extends AppCompatActivity {
             Bundle b = data.getExtras();
             image = (Bitmap) b.get("data");
             saveFileInLocalFolder();
-            Intent intent = getIntent();
-            String activity = intent.getStringExtra(messageToCamara);
-            Log.d(TAG, "onActivityResult:1 "+ activity.toLowerCase());
-           if(activity.toLowerCase().equals(addContactName)) {
-               Log.d(TAG, " go to: " + addContactName);
-               Intent camaraintent = new Intent(this, AddContactActivity.class);
-               camaraintent.putExtra(messageToCamara,filePath);
-               startActivity(camaraintent);
-           }
-          else  if(activity.toLowerCase().equals(DetailActivity)) {
-                Log.d(TAG, " go to: " + DetailActivity);
-                Intent camaraintent = new Intent(this, DetailActivity.class);
+            changeActivity();
+        }
+        else
+        {
+            finish();
 
-                BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
+        }
+    }
+    private void changeActivity()
+    {
+        Intent intent = getIntent();
+        String activity = intent.getStringExtra(messageToCamara);
+        Log.d(TAG, "onActivityResult:1 "+ activity.toLowerCase());
+        if(activity.toLowerCase().equals(addContactName)) {
+            Log.d(TAG, " go to: " + addContactName);
+            Intent camaraintent = new Intent(this, AddContactActivity.class);
+            camaraintent.putExtra(messageToCamara,filePath);
+            startActivity(camaraintent);
+        }
+        else  if(activity.toLowerCase().equals(DetailActivity)) {
+            Log.d(TAG, " go to: " + DetailActivity);
+            Intent camaraintent = new Intent(this, DetailActivity.class);
 
-                camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
-                camaraintent.putExtra(messageToCamara,filePath);
+            BEFriend currentFriendId= _dataAccess.getFriendByID(getIntent().getLongExtra(BEFriendKey,0));
 
-                startActivity(camaraintent);
-            }
+            camaraintent.putExtra(messageToDetail,currentFriendId.m_id);
+            camaraintent.putExtra(messageToCamara,filePath);
+
+            startActivity(camaraintent);
         }
     }
     private void saveFileInLocalFolder() {
