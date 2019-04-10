@@ -147,12 +147,12 @@ public class DetailActivity extends FragmentActivity {
 
 
 
-    private void setGUI() {
+    private void setGUI()
+    {
         if (_dataAccess.getFriendsList().size() <= 0) {
             Log.d(TAG, "The database is empty");
         } else {
-            currentFriend= _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
-
+                currentFriend = _dataAccess.getFriendByID(getIntent().getLongExtra("friend",0));
                 Log.d(TAG, "setGUI: " + currentFriend.toString());
                 getCurrentFriendImage();
                 etName.setText(currentFriend.getM_name());
@@ -161,9 +161,9 @@ public class DetailActivity extends FragmentActivity {
                 etAddress.setText(currentFriend.getM_address());
                 etBirthday.setText(currentFriend.getM_birthday());
                 etURL.setText(currentFriend.getM_webSite());
-
             }
-        }
+    }
+
 
 
     private void sendSMS() {
@@ -328,8 +328,6 @@ public class DetailActivity extends FragmentActivity {
     private void addData(Intent x, BEFriend f) {
         x.putExtra("friend", f);
     }
-
-
 
     public void goToCamera(View view)
     {
